@@ -55,9 +55,9 @@ if (process.env.NODE_ENV === "production") {
 }
 // Point the server to the build folder of the app
 if (process.env.NODE_ENV === "production") {
-    app.use(express_1.default.static(path_1.default.join(__dirname, "../../client/dist")));
+    app.use(express_1.default.static(path_1.default.join(__dirname, "../../client/build")));
     app.get("*", (req, res) => {
-        res.sendFile(path_1.default.resolve(__dirname, "../../client", "dist", "index.html"));
+        res.sendFile(path_1.default.resolve(__dirname, "../../client", "build", "index.html"));
     });
 }
 const PORT = process.env.PORT || 5000;
