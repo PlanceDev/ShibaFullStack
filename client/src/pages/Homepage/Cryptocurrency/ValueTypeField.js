@@ -25,10 +25,13 @@ export const ValueTypeField = ({
 
   const handleMaxValue = async () => {
     setBuyValue(tokenBalance);
+
     let value = window.web3.utils.toWei(tokenBalance.toString(), "ether");
+
     const currentContractAddress = addressSet.find(
       (item) => item.chainId === currentChainId && item.estimate === true
     );
+
     await contract?.methods
       .estimate(currentContractAddress.testnet, value)
       .call()
@@ -41,10 +44,6 @@ export const ValueTypeField = ({
   };
 
   const handleBuyChange = async (e) => {
-    if (tokenBalance < e.target.value) {
-      alert("Your amount is too much");
-      return;
-    }
     setBuyValue(e.target.value);
     if (e.target.value !== "") {
       let value = window.web3.utils.toWei(e.target.value.toString(), "ether");
