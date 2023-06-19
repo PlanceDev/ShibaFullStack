@@ -44,13 +44,18 @@ const purchaseTokens = async (req, res) => {
                 }
             }
         }
-        // Create new referral code
-        const newReferralCode = new ReferralCode_1.default({
+        const hasReferralCode = await ReferralCode_1.default.findOne({
             owner: req.body.address,
         });
-        contributor.isAffiliate = true;
-        contributor.referralCode = newReferralCode._id;
-        await newReferralCode.save();
+        if (!hasReferralCode) {
+            // Create new referral code
+            const newReferralCode = new ReferralCode_1.default({
+                owner: req.body.address,
+            });
+            contributor.isAffiliate = true;
+            contributor.referralCode = newReferralCode._id;
+            await newReferralCode.save();
+        }
         await contributor.save();
         return res.status(200).send(contributor);
     }

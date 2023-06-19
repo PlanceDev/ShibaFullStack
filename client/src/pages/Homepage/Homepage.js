@@ -142,7 +142,7 @@ export const Homepage = () => {
         }
       };
 
-      const loadToeknContract = async () => {
+      const loadTokenContract = async () => {
         const currentWContractAddress = addressSet.find(
           (item) => item.chainId === currentChainId && item.estimate === true
         );
@@ -156,8 +156,10 @@ export const Homepage = () => {
       };
 
       let _contract = await loadContract();
+      let _tokenContract = await loadTokenContract();
 
-      let _tokenContract = await loadToeknContract();
+      console.log(_contract, _tokenContract);
+
       setContract(_contract);
       setTokenContract(_tokenContract);
     };

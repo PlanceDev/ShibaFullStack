@@ -62,9 +62,9 @@ export const TokenBalanceField = ({
                 ? "-"
                 : Number(tokenBalance).toFixed(7)
               : i === 1
-              ? `$ ${Number(currentPrice).toFixed(7)}`
+              ? `$ ${Number(currentPrice / 10000).toFixed(7)}`
               : i === 2
-              ? `$ ${Number(nextPrice).toFixed(7)}`
+              ? `$ ${Number(nextPrice / 10000).toFixed(7)}`
               : i === 3 && walletAddress === "undefined"
               ? "-"
               : points}

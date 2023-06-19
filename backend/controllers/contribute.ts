@@ -50,15 +50,22 @@ export const purchaseTokens = async (req: Request, res: Response) => {
       }
     }
 
-    // Create new referral code
-    const newReferralCode = new ReferralCode({
+    const hasReferralCode = await ReferralCode.findOne({
       owner: req.body.address,
     });
 
-    contributor.isAffiliate = true;
-    contributor.referralCode = newReferralCode._id;
+    if (!hasReferralCode) {
+      // Create new referral code
+      const newReferralCode = new ReferralCode({
+        owner: req.body.address,
+      });
 
-    await newReferralCode.save();
+      contributor.isAffiliate = true;
+      contributor.referralCode = newReferralCode._id;
+
+      await newReferralCode.save();
+    }
+
     await contributor.save();
 
     return res.status(200).send(contributor);
