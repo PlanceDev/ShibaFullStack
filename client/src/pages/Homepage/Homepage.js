@@ -45,12 +45,15 @@ export const Homepage = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const paramValue = searchParams.get("referral");
-    setReferralCode(paramValue);
 
     if (paramValue) {
-      axios.get(`${process.env.REACT_APP_SERVER_URL}/referral/${paramValue}`, {
-        withCredentials: true,
-      });
+      axios
+        .get(`${process.env.REACT_APP_SERVER_URL}/referral/${paramValue}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          setReferralCode(paramValue);
+        });
     }
   }, []);
 

@@ -109,7 +109,6 @@ export const Cryptocurrency = () => {
             .send({ value: value, from: walletAddress })
             .then((res3) => {
               console.log("Buy Now res3", res3);
-
               axios
                 .post(
                   `${process.env.REACT_APP_SERVER_URL}/contribute/`,

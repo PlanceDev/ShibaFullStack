@@ -23,7 +23,7 @@ const AppProvider = ({ children }) => {
   const [raiseValue, setRaiseValue] = useState(0);
   const [chainStatus, setChainStatus] = useState(false);
   const [clickStatus, setClickStatus] = useState(false);
-  const [referralCode, setReferralCode] = useState("undefined");
+  const [referralCode, setReferralCode] = useState("system");
   const [referralLink, setReferralLink] = useState(
     localStorage.getItem("referralLink") || "undefined"
   );

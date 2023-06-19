@@ -17,7 +17,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     await user.save();
 
-    console.log(user);
+    // console.log(user);
 
     return res.status(200).send(user);
   } catch (error) {
