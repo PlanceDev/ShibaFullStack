@@ -1,0 +1,1 @@
+(self.webpackChunkshibart=self.webpackChunkshibart||[]).push([[601],{46601:function(){}}]);

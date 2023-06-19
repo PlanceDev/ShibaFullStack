@@ -1,0 +1,43 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f73aa496.css",
+    "main.js": "/static/js/main.3d58b328.js",
+    "static/js/601.46d884ba.chunk.js": "/static/js/601.46d884ba.chunk.js",
+    "static/js/27.f2b66d9b.chunk.js": "/static/js/27.f2b66d9b.chunk.js",
+    "static/js/419.dc8fa2f2.chunk.js": "/static/js/419.dc8fa2f2.chunk.js",
+    "static/js/778.a47569b3.chunk.js": "/static/js/778.a47569b3.chunk.js",
+    "static/media/roadmap.png": "/static/media/roadmap.dd6b167a20ad0557291e.png",
+    "static/media/FAQ_DOG.png": "/static/media/FAQ_DOG.f1aae115d745fd2f7ff7.png",
+    "static/media/header-img.png": "/static/media/header-img.b58bafb5ce291eb00ab5.png",
+    "static/media/image 7.png": "/static/media/image 7.7b579fa5457fc5d9cae9.png",
+    "static/media/image 3.png": "/static/media/image 3.df71d6dddb18ba44e8b3.png",
+    "static/media/image 10.png": "/static/media/image 10.5075eebfeaebc8a164ae.png",
+    "static/media/image 2.png": "/static/media/image 2.cc41253955ef3c408c09.png",
+    "static/media/image 14.png": "/static/media/image 14.5075eebfeaebc8a164ae.png",
+    "static/media/image 13.png": "/static/media/image 13.6fdd427093af61e19fb2.png",
+    "static/media/image 5.png": "/static/media/image 5.5a33290214b0b3fcdaa6.png",
+    "static/media/image 19.png": "/static/media/image 19.2dd6a46e7fd184b188cd.png",
+    "static/media/image 6.png": "/static/media/image 6.f4d75cfe1b168c8e8786.png",
+    "static/media/image 1.png": "/static/media/image 1.5b003a40ee387c33bd20.png",
+    "static/media/image 15.png": "/static/media/image 15.6be1e2148ca70fd2c27a.png",
+    "static/media/image 4.png": "/static/media/image 4.644e9d31aecbb5fbee13.png",
+    "static/media/image 9.png": "/static/media/image 9.fcebc8f021d6422e9702.png",
+    "static/media/image 17.png": "/static/media/image 17.85676c841124a9f76f5d.png",
+    "static/media/image 8.png": "/static/media/image 8.35c18f5c3025e712da21.png",
+    "static/media/image 18.png": "/static/media/image 18.5a33290214b0b3fcdaa6.png",
+    "static/media/image 12.png": "/static/media/image 12.fe07f3dcd680834b3221.png",
+    "static/media/image 11.png": "/static/media/image 11.8aeb77f72fc6ea58e792.png",
+    "static/media/image 16.png": "/static/media/image 16.8e8f4d7312a652d3855f.png",
+    "static/media/modal-logo.svg": "/static/media/modal-logo.9fa570b247020e6381185102a1baf5fb.svg",
+    "static/media/logo.svg": "/static/media/logo.807a2780dd3ec70cae34a3b80e827fb7.svg",
+    "index.html": "/index.html",
+    "main.f73aa496.css.map": "/static/css/main.f73aa496.css.map",
+    "main.3d58b328.js.map": "/static/js/main.3d58b328.js.map",
+    "419.dc8fa2f2.chunk.js.map": "/static/js/419.dc8fa2f2.chunk.js.map",
+    "778.a47569b3.chunk.js.map": "/static/js/778.a47569b3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f73aa496.css",
+    "static/js/main.3d58b328.js"
+  ]
+}
