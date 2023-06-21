@@ -204,7 +204,14 @@ export const Homepage = () => {
               chainName: currentChain.name,
               nativeCurrency: {
                 name: currentChain.network,
-                symbol: currentChain.cryptoType,
+                symbol:
+                  currentChain.network === "sepolia"
+                    ? "ETH"
+                    : currentChain.network === "bsc"
+                    ? "BNB"
+                    : currentChain.network === "arbitrum"
+                    ? "ETH"
+                    : "ETH",
                 decimals: 18,
               },
             },
