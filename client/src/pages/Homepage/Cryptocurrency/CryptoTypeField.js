@@ -100,7 +100,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl: "https://mainnet.infura.io/v3/",
+            rpcUrl: "https://rpc2.sepolia.org",
           })
         );
         break;
