@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import { palette } from "../../../themes";
+import { useSelector, useDispatch } from "react-redux";
 
 const valueTypes = [
   { name: "Balance" },
@@ -16,6 +17,14 @@ export const TokenBalanceField = ({
   nextPrice,
   walletAddress,
 }) => {
+  const currentUser = useSelector((state) => state.user);
+  const currentChain = useSelector((state) => state.chain);
+
+  // useEffect(() => {
+  //   console.log("currentUser", currentUser);
+  //   console.log("currentChain", currentChain);
+  // }, [currentChain]);
+
   return (
     <Box
       display={"flex"}
@@ -60,14 +69,14 @@ export const TokenBalanceField = ({
             {i === 0
               ? walletAddress === "undefined"
                 ? "-"
-                : Number(tokenBalance).toFixed(7)
+                : Number(currentUser.balance).toFixed(7)
               : i === 1
-              ? `$ ${Number(currentPrice / 10000).toFixed(7)}`
+              ? `$ ${Number(currentChain.currentPrice / 10000).toFixed(7)}`
               : i === 2
-              ? `$ ${Number(nextPrice / 10000).toFixed(7)}`
+              ? `$ ${Number(currentChain.nextPrice / 10000).toFixed(7)}`
               : i === 3 && walletAddress === "undefined"
               ? "-"
-              : points}
+              : currentUser.points}
           </Typography>
         </Box>
       ))}

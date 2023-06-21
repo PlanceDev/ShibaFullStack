@@ -3,8 +3,6 @@ import { useState, createContext } from "react";
 const Context = createContext();
 
 const AppProvider = ({ children }) => {
-  const [myWeb3, setMyWeb3] = useState(null);
-
   // Add default to undefined to avoid errors
   const [walletAddress, setWalletAddress] = useState(
     localStorage.getItem("wallet account") || "undefined"
@@ -55,8 +53,7 @@ const AppProvider = ({ children }) => {
         setRaiseValue,
         walletAddress,
         setWalletAddress,
-        myWeb3,
-        setMyWeb3,
+
         chainStatus,
         setChainStatus,
         clickStatus,

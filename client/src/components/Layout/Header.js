@@ -1,7 +1,11 @@
 import { useContext, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser } from "../../store/User";
 import { useNavigate } from "react-router-dom";
 import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
+
+import { setCurrentChain } from "../../store/Chain";
 
 import { Box, Link, Button, Typography } from "@mui/material";
 
@@ -28,6 +32,8 @@ const navbars = [
 export const Header = () => {
   const navigate = useNavigate();
   const { account, deactivate } = useWeb3React();
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user);
 
   const {
     openModal,
@@ -45,21 +51,29 @@ export const Header = () => {
   const open = Boolean(profileMenuOpen);
 
   useEffect(() => {
-    if (account) {
-      axios
-        .post(
-          `${process.env.REACT_APP_SERVER_URL}/user`,
-          {
-            address: account,
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          setReferralLink(res.data.referralCode);
-          localStorage.setItem("referralLink", res.data.referralCode || "");
-          // setWalletAddress(account);
-        });
-    }
+    console.log("account", account);
+    console.log("currentUser", currentUser);
+    // if (account) {
+    //   axios
+    //     .post(
+    //       `${process.env.REACT_APP_SERVER_URL}/user`,
+    //       {
+    //         address: account,
+    //       },
+    //       { withCredentials: true }
+    //     )
+    //     .then((res) => {
+    //       dispatch(
+    //         setCurrentUser({
+    //           address: account,
+    //           referralLink: res.data.referralCode,
+    //         })
+    //       );
+    //       setReferralLink(res.data.referralCode);
+    //       localStorage.setItem("referralLink", res.data.referralCode || "");
+    //       setWalletAddress(account);
+    //     });
+    // }
   }, [account]);
 
   return (
@@ -267,7 +281,7 @@ export const Header = () => {
               )}
             </Box>
             <Box display={"flex"} justifyContent={"center"} p={4}>
-              {walletAddress === "undefined" ? (
+              {!currentUser.address ? (
                 <Button
                   variant="h5"
                   onClick={() => {

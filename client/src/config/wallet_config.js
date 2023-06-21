@@ -55,6 +55,7 @@ export const walletlink = new WalletLinkConnector({
   supportedChainIds: [1, 4, 80001, 250],
 });
 
+// Wallets to connect to wallet connect modal
 export const walletLists = [
   {
     icon: metamaskIcon,
@@ -73,6 +74,7 @@ export const walletLists = [
   },
 ];
 
+// Crypto types, data, and images
 export const cryptoTypes = [
   {
     networkType: "sepolia",
@@ -125,6 +127,56 @@ export const cryptoTypes = [
     chainId: "0xaa36a7",
   },
   {
+    networkType: "arbitrum",
+    type: "a_Raiser",
+    typeName: "Raiser",
+    name: "ETH",
+    token: "",
+    symbol: eth,
+    symbol1: a_eth,
+    chainId: "0x66eed",
+  },
+  {
+    networkType: "arbitrum",
+    type: "a_WETH",
+    typeName: "WETH",
+    name: "WETH",
+    token: "ERC20",
+    symbol: eth,
+    symbol1: a_eth,
+    chainId: "0x66eed",
+  },
+  {
+    networkType: "arbitrum",
+    type: "a_WBTC",
+    typeName: "WBTC",
+    name: "WBTC",
+    token: "ERC20",
+    symbol: wbtc,
+    symbol1: a_wbtc,
+    chainId: "0x66eed",
+  },
+  {
+    networkType: "arbitrum",
+    type: "a_USDC",
+    typeName: "USDC",
+    name: "USDC",
+    token: "ERC20",
+    symbol: usdc,
+    symbol1: a_usdc,
+    chainId: "0x66eed",
+  },
+  {
+    networkType: "arbitrum",
+    type: "a_USDT",
+    typeName: "USDT",
+    name: "USDT",
+    token: "ERC20",
+    symbol: usdt,
+    symbol1: a_usdt,
+    chainId: "0x66eed",
+  },
+  {
     networkType: "bsc",
     type: "b_Raiser",
     typeName: "Raiser",
@@ -132,7 +184,7 @@ export const cryptoTypes = [
     token: "",
     symbol: bnb,
     symbol1: a_bnb,
-    chainId: "0x38",
+    chainId: "0x61",
   },
   {
     networkType: "bsc",
@@ -142,7 +194,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: usdt,
     symbol1: a_usdt,
-    chainId: "0x38",
+    chainId: "0x61",
   },
   {
     networkType: "bsc",
@@ -152,7 +204,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: busd,
     symbol1: a_busd,
-    chainId: "0x38",
+    chainId: "0x61",
   },
 ];
 

@@ -19,7 +19,7 @@ export const ProfileMenuBar = ({
 }) => {
   const handleDisconnect = () => {
     deactivate();
-    localStorage.setItem("wallet account", undefined);
+    localStorage.clear();
     setWalletAddress("undefined");
   };
 

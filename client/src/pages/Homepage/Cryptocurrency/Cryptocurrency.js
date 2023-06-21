@@ -60,11 +60,21 @@ export const Cryptocurrency = () => {
         cryptoType !== "b_Raiser" ||
         cryptoType !== "s_Raiser"
       ) {
+        // currentWContractAddress = addressSet.find(
+        //   (item) => item.chainId === currentChainId && item.estimate === true
+        // );
+
+        // currentContractAddress = addressSet.find(
+        //   (item) => item.chainId === currentChainId && item.erc20 === false
+        // );
+
         currentWContractAddress = addressSet.find(
           (item) => item.chainId === currentChainId && item.estimate === true
         );
+
         currentContractAddress = addressSet.find(
-          (item) => item.chainId === currentChainId && item.erc20 === false
+          (item) =>
+            item.cryptoType === cryptoType && item.chainId === currentChainId
         );
       } else {
         currentWContractAddress = addressSet.find(
@@ -73,6 +83,7 @@ export const Cryptocurrency = () => {
             item.chainId === currentChainId &&
             item.erc20 === true
         );
+
         currentContractAddress = addressSet.find(
           (item) => item.chainId === currentChainId && item.erc20 === false
         );
