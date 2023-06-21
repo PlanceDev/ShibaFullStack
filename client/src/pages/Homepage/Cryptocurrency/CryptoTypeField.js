@@ -68,6 +68,20 @@ export const CryptoTypeField = ({ cryptoType }) => {
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
 
+  // Handle Token Change
+  const tokenPicker = async (chain) => {
+    const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
+
+    dispatch(
+      setCurrentChain({
+        tokenSymbol: chain,
+        tokenAbi: selectedChain[0]["abi"],
+        tokenContract: selectedChain[0][chain],
+      })
+    );
+  };
+
+  // Handle network change
   const handleChange = (event, newValue) => {
     setValue(newValue);
 
@@ -83,7 +97,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
             contract: "0xa504fe0f0af7ee985cede1e72363d644adf40314",
             tokenContract: "0x99e78fbcfa087f72ddc927aa35da148518416959",
             tokenSymbol: "s_Raiser",
-            tokenAbi: chainData[0].s_Raiser,
+            tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: "https://mainnet.infura.io/v3/",
@@ -101,7 +115,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
             contract: "0x7bda4bff3d604aeb76b8ca825ecf66e1037c8262",
             tokenContract: "0x8a9043da48f2ec50a35cef0ec26932e61db1b2a3",
             tokenSymbol: "b_Raiser",
-            tokenAbi: chainData[0].b_Raiser,
+            tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -119,7 +133,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
             contract: "0x56f683b9d6eb6a8ef1d3fab1d335531414395ec2",
             tokenContract: "0xb942face0d4fe5724d0192f6999c5192a53450ee",
             tokenSymbol: "a_Raiser",
-            tokenAbi: chainData[0].a_Raiser,
+            tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
@@ -141,18 +155,6 @@ export const CryptoTypeField = ({ cryptoType }) => {
   //     };
   //   }
   // }, [networkChanged]);
-
-  const chainPicker = async (chain) => {
-    const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
-
-    dispatch(
-      setCurrentChain({
-        tokenSymbol: chain,
-        tokenAbi: selectedChain[0]["abi"],
-        tokenContract: selectedChain[0][chain],
-      })
-    );
-  };
 
   return (
     <>
@@ -190,7 +192,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
               <>
                 <Button
                   key={i}
-                  onClick={() => chainPicker(item.type)}
+                  onClick={() => tokenPicker(item.type)}
                   sx={{
                     width: "110px",
                     background:
