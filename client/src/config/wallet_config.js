@@ -27,7 +27,7 @@ export function resetWalletConnector(connector) {
 }
 
 const SUPPORTED_CHAIN_IDS = [
-  1, 4, 3, 42, 5, 56, 97, 137, 80001, 56, 97, 1337, 250, 11155111,
+  1, 4, 3, 42, 5, 56, 97, 137, 80001, 56, 97, 1337, 250, 11155111, 421613,
 ];
 
 const RPC_URLS = {
@@ -52,7 +52,7 @@ export const walletlink = new WalletLinkConnector({
   // coinbase wallet
   url: RPC_URLS[137],
   appName: "",
-  supportedChainIds: [1, 4, 80001, 250],
+  supportedChainIds: [1, 4, 80001, 250, 421613],
 });
 
 // Wallets to connect to wallet connect modal
@@ -242,6 +242,9 @@ export const networks = {
   },
   sepolia: {
     chainId: `0x${Number(11155111).toString(16)}`,
+  },
+  arbitrum: {
+    chainId: `0x${Number(421613).toString(16)}`,
   },
 };
 

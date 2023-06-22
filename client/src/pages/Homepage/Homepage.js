@@ -36,7 +36,6 @@ export const Homepage = () => {
   const currentUser = useSelector((state) => state.user);
   const currentChain = useSelector((state) => state.chain);
   const dispatch = useDispatch();
-  const [raisedAmount, setRaisedAmount] = useState(0);
 
   const {
     library,
@@ -92,7 +91,7 @@ export const Homepage = () => {
         );
       });
     } catch (err) {
-      console.log("get price error", err);
+      // console.log("get price error", err);
     }
   };
 
@@ -113,7 +112,7 @@ export const Homepage = () => {
         );
       });
     } catch (err) {
-      console.log("get next price error", err);
+      // console.log("get next price error", err);
     }
   };
 
@@ -122,13 +121,41 @@ export const Homepage = () => {
     try {
       if (!window.web3.eth) return;
 
-      const accounts = await window.web3.eth.getAccounts();
-      const balance = await window.web3.eth.getBalance(accounts[0]);
-      const balanceValue = window.web3.utils.fromWei(balance, "ether");
+      let accounts = await window.web3.eth.getAccounts();
 
-      dispatch(
+      // Get Native balance
+      let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
+
+      if (nativeTokens.includes(currentChain.tokenSymbol)) {
+        const balance = await window.web3.eth.getBalance(accounts[0]);
+        const balanceValue = window.web3.utils.fromWei(balance, "ether");
+
+        console.log("eth balance", balanceValue);
+
+        return dispatch(
+          setCurrentUser({
+            balance: Number(balanceValue).toFixed(6),
+          })
+        );
+      }
+
+      // Get ERC-20 Token balance
+      const tokenAddress = currentChain.tokenContract;
+      const tokenContract = new ethers.Contract(
+        tokenAddress,
+        currentChain.tokenAbi,
+        provider
+      );
+
+      const tokenBalance = await tokenContract.balanceOf(accounts[0]);
+      const tokenBalanceValue = window.web3.utils.fromWei(
+        tokenBalance.toString(),
+        "ether"
+      );
+
+      return dispatch(
         setCurrentUser({
-          balance: Number(balanceValue).toFixed(6),
+          balance: Number(tokenBalanceValue).toFixed(6),
         })
       );
     } catch (err) {
@@ -172,8 +199,14 @@ export const Homepage = () => {
 
       return await contract?.raiseLocal().then((res) => {
         const raisedAmount = window.web3.utils.fromWei(res.toString(), "ether");
-        console.log(raisedAmount);
-        setRaisedAmount(raisedAmount);
+
+        // TODO get totals for all chains
+
+        dispatch(
+          setCurrentChain({
+            raisedAmount,
+          })
+        );
       });
     } catch (err) {
       console.log("get raised amount error", err);
@@ -190,6 +223,7 @@ export const Homepage = () => {
           method: "wallet_switchEthereumChain",
           params: [{ chainId: `0x${currentChain.chainNumber.toString(16)}` }],
         })
+
         .catch((error) => {
           console.error("Error switching chain:", error);
         });

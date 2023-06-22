@@ -10,10 +10,11 @@ const initialState = {
   contract: "0xa504fe0f0af7ee985cede1e72363d644adf40314",
   tokenContract: "0x99e78fbcfa087f72ddc927aa35da148518416959",
   tokenSymbol: "s_Raiser",
-  tokenAbi: chainData[0].s_Raiser,
+  tokenAbi: chainData.filter((obj) => obj.hasOwnProperty("s_WETH"))[0]["abi"],
   currentPrice: 0,
   nextPrice: 0,
   rpcUrl: "https://rpc2.sepolia.org",
+  raisedAmount: 0,
 };
 
 const chainSlice = createSlice({
@@ -33,6 +34,7 @@ const chainSlice = createSlice({
       state.currentPrice = action.payload.currentPrice || state.currentPrice;
       state.nextPrice = action.payload.nextPrice || state.nextPrice;
       state.rpcUrl = action.payload.rpcUrl || state.rpcUrl;
+      state.raisedAmount = action.payload.raisedAmount || state.raisedAmount;
     },
   },
 });

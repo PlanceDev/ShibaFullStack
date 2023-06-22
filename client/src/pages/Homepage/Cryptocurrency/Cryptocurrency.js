@@ -1,6 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid } from "@mui/material";
 import axios from "axios";
+import { ethers } from "ethers";
+import Web3 from "web3";
 import {
   CryptoTypeField,
   TokenBalanceField,
@@ -13,6 +15,8 @@ import {
 import { CustomButton } from "../../../components/CustomButton";
 import { Context } from "../../../context/AppContext";
 import { addressSet } from "../../../constant/addressSet";
+import { useSelector, useDispatch } from "react-redux";
+import { mainContractAbi } from "../../../constant/mainContractAbi";
 
 import headerImg from "../../../assets/images/home/header-img.png";
 import a_eth from "../../../assets/images/home/a_eth.png";
@@ -24,8 +28,8 @@ export const Cryptocurrency = () => {
     setOpenModal,
     setCurrentChainId,
     currentChainId,
-    contract,
-    tokenContract,
+    // contract,
+    // tokenContract,
     points,
     tokenBalance,
     currentPrice,
@@ -45,6 +49,10 @@ export const Cryptocurrency = () => {
   const [buyValue, setBuyValue] = useState(0);
   const [pointsValue, setPointsValue] = useState(0);
 
+  const currentChain = useSelector((state) => state.chain);
+  const currentUser = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const handleOpenModalClick = () => {
     setOpenModal(true);
   };
@@ -52,94 +60,130 @@ export const Cryptocurrency = () => {
   const handleBuyNowClick = async () => {
     try {
       let value = window.web3.utils.toWei(buyValue.toString(), "ether");
-      let currentWContractAddress;
-      let currentContractAddress;
+      let provider = new ethers.providers.Web3Provider(window.ethereum);
+      let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
 
-      if (
-        cryptoType !== "a_Raiser" ||
-        cryptoType !== "b_Raiser" ||
-        cryptoType !== "s_Raiser"
-      ) {
-        // currentWContractAddress = addressSet.find(
-        //   (item) => item.chainId === currentChainId && item.estimate === true
-        // );
+      const contract = await new window.web3.eth.Contract(
+        mainContractAbi,
+        currentChain.contract
+      );
 
-        // currentContractAddress = addressSet.find(
-        //   (item) => item.chainId === currentChainId && item.erc20 === false
-        // );
-
-        currentWContractAddress = addressSet.find(
-          (item) => item.chainId === currentChainId && item.estimate === true
+      //  Request approval for non-native tokens
+      if (!nativeTokens.includes(currentChain.tokenSymbol)) {
+        const tokenContract = await new ethers.Contract(
+          currentChain.tokenContract,
+          currentChain.tokenAbi,
+          provider.getSigner()
         );
 
-        currentContractAddress = addressSet.find(
-          (item) =>
-            item.cryptoType === cryptoType && item.chainId === currentChainId
-        );
-      } else {
-        currentWContractAddress = addressSet.find(
-          (item) =>
-            item.cryptoType === cryptoType &&
-            item.chainId === currentChainId &&
-            item.erc20 === true
-        );
+        await tokenContract
+          .allowance(currentUser.address, currentChain.tokenContract)
+          .then(async (res) => {
+            if (Number(res) !== 0) return;
 
-        currentContractAddress = addressSet.find(
-          (item) => item.chainId === currentChainId && item.erc20 === false
-        );
+            await tokenContract
+              .approve(currentChain.tokenContract, value)
+              .then(async (res1) => {
+                console.log(res1);
+              });
+          });
       }
 
-      await tokenContract?.methods
-        .allowance(walletAddress, currentContractAddress.testnet)
-        .call()
-        .then(async (res) => {
-          if (
-            cryptoType !== "a_Raiser" &&
-            cryptoType !== "b_Raiser" &&
-            cryptoType !== "s_Raiser"
-          ) {
-            if (Number(res) === 0) {
-              await tokenContract?.methods
-                .approve(currentContractAddress.testnet, value)
-                .send({ from: walletAddress })
-                .then(async (res1) => {
-                  console.log("Buy Now res1", res1.blockHash);
-
-                  await contract?.methods
-                    .contribute(currentWContractAddress.testnet, value)
-                    .send({ value: res, from: walletAddress })
-                    .then((res2) => {
-                      console.log("Buy Now res2", res2);
-                    });
-                });
-            }
-          }
-
-          await contract?.methods
-            .contribute(currentWContractAddress.testnet, res, referralCode)
-            .send({ value: value, from: walletAddress })
-            .then((res3) => {
-              console.log("Buy Now res3", res3);
-              axios
-                .post(
-                  `${process.env.REACT_APP_SERVER_URL}/contribute/`,
-                  {
-                    address: walletAddress,
-                    blockHash: res3.blockHash,
-                  },
-                  { withCredentials: true }
-                )
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            })
-            .catch((err) => {
-              console.log(err);
-            });
+      // Send contribution transaction
+      await contract.methods
+        .contribute(currentChain.tokenContract, value, referralCode)
+        .send({
+          from: currentUser.address,
+          value: value,
+        })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
         });
+
+      //  // // //
+
+      // if (nativeTokens.includes(currentChain.tokenSymbol)) {
+
+      // if (
+      //   cryptoType !== "a_Raiser" ||
+      //   cryptoType !== "b_Raiser" ||
+      //   cryptoType !== "s_Raiser"
+      // ) {
+      //   currentWContractAddress = addressSet.find(
+      //     (item) => item.chainId === currentChainId && item.estimate === true
+      //   );
+
+      //   currentContractAddress = addressSet.find(
+      //     (item) =>
+      //       item.cryptoType === cryptoType && item.chainId === currentChainId
+      //   );
+      // } else {
+      //   currentWContractAddress = addressSet.find(
+      //     (item) =>
+      //       item.cryptoType === cryptoType &&
+      //       item.chainId === currentChainId &&
+      //       item.erc20 === true
+      //   );
+
+      //   currentContractAddress = addressSet.find(
+      //     (item) => item.chainId === currentChainId && item.erc20 === false
+      //   );
+      // }
+
+      // await tokenContract?.methods
+      //   .allowance(walletAddress, currentContractAddress.testnet)
+      //   .call()
+      //   .then(async (res) => {
+      //     if (
+      //       cryptoType !== "a_Raiser" &&
+      //       cryptoType !== "b_Raiser" &&
+      //       cryptoType !== "s_Raiser"
+      //     ) {
+      //       if (Number(res) === 0) {
+      //         await tokenContract?.methods
+      //           .approve(currentContractAddress.testnet, value)
+      //           .send({ from: walletAddress })
+      //           .then(async (res1) => {
+      //             console.log("Buy Now res1", res1.blockHash);
+
+      //             await contract?.methods
+      //               .contribute(currentWContractAddress.testnet, value)
+      //               .send({ value: res, from: walletAddress })
+      //               .then((res2) => {
+      //                 console.log("Buy Now res2", res2);
+      //               });
+      //           });
+      //       }
+      //     }
+
+      //     await contract?.methods
+      //       .contribute(currentWContractAddress.testnet, res, referralCode)
+      //       .send({ value: value, from: walletAddress })
+      //       .then((res3) => {
+      //         console.log("Buy Now res3", res3);
+      //         axios
+      //           .post(
+      //             `${process.env.REACT_APP_SERVER_URL}/contribute/`,
+      //             {
+      //               address: walletAddress,
+      //               blockHash: res3.blockHash,
+      //             },
+      //             { withCredentials: true }
+      //           )
+      //           .then((res) => {
+      //             console.log(res);
+      //           })
+      //           .catch((err) => {
+      //             console.log(err);
+      //           });
+      //       })
+      //       .catch((err) => {
+      //         console.log(err);
+      //       });
+      //   });
     } catch (err) {
       console.log(err);
     }

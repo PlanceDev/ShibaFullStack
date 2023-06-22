@@ -1,8 +1,11 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 import { palette } from "../../../themes";
+import { useSelector, useDispatch } from "react-redux";
 
 export const RaisedField = ({ raisedValue }) => {
+  const currentChain = useSelector((state) => state.chain);
+
   return (
     <Box
       p={3}
@@ -22,9 +25,11 @@ export const RaisedField = ({ raisedValue }) => {
           zIndex: 1000,
         }}
       >
-        {raisedValue === 0
+        {currentChain.raisedAmount === 0
           ? `Raise is coming soon`
-          : `RAISED SO FAR: $ ${(Math.round(raisedValue * 100) / 100)
+          : `RAISED SO FAR: $ ${(
+              Math.round(currentChain.raisedAmount * 100) / 100
+            )
               .toFixed(2)
               .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")}`}
       </Typography>

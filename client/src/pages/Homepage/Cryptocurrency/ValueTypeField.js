@@ -1,11 +1,16 @@
 import React, { useContext, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
-
+import { ethers } from "ethers";
+import Web3 from "web3";
 import { InputField } from "../../../components/InputField";
 import { Context } from "../../../context/AppContext";
 
 import { addressSet } from "../../../constant/addressSet";
 import shibartIcon from "../../../assets/images/home/shibartIcon.png";
+
+import { useSelector, useDispatch } from "react-redux";
+import { setPurchaseValue } from "../../../store/PurchaseValue";
+import { mainContractAbi } from "../../../constant/mainContractAbi";
 
 export const ValueTypeField = ({
   selectedTokenIcon,
@@ -16,45 +21,40 @@ export const ValueTypeField = ({
   setPointsValue,
   currentChainId,
 }) => {
-  const { contract } = useContext(Context);
+  let provider;
 
-  useEffect(() => {
-    setBuyValue(0);
-    setPointsValue(0);
-  }, [currentChainId, setBuyValue, setPointsValue]);
-
-  const handleMaxValue = async () => {
-    setBuyValue(tokenBalance);
-
-    let value = window.web3.utils.toWei(tokenBalance.toString(), "ether");
-
-    const currentContractAddress = addressSet.find(
-      (item) => item.chainId === currentChainId && item.estimate === true
-    );
-
-    await contract?.methods
-      .estimate(currentContractAddress.testnet, value)
-      .call()
-      .then((res) => {
-        setPointsValue(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const currentChain = useSelector((state) => state.chain);
+  const currentUser = useSelector((state) => state.user);
+  const purchaseValue = useSelector((state) => state.purchaseValue);
+  const dispatch = useDispatch();
 
   const handleBuyChange = async (e) => {
+    if (!provider) {
+      provider = new ethers.providers.Web3Provider(
+        new Web3.providers.HttpProvider(currentChain.rpcUrl)
+      );
+    }
+
+    const contract = new ethers.Contract(
+      currentChain.contract,
+      mainContractAbi,
+      provider
+    );
+
     setBuyValue(e.target.value);
+
     if (e.target.value !== "") {
       let value = window.web3.utils.toWei(e.target.value.toString(), "ether");
-      const currentContractAddress = addressSet.find(
-        (item) => item.chainId === currentChainId && item.estimate === true
-      );
-      await contract?.methods
-        .estimate(currentContractAddress.testnet, value)
-        .call()
+
+      // Get equivalent points from contract
+      await contract
+        .estimate(currentChain.tokenContract, value)
         .then((res) => {
-          setPointsValue(res);
+          dispatch(
+            setPurchaseValue({
+              pointsValue: Number(res.toString()),
+            })
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -65,6 +65,11 @@ export const ValueTypeField = ({
   const handlePointsChange = (e) => {
     setPointsValue(e.target.value);
   };
+
+  useEffect(() => {
+    setBuyValue(0);
+    setPointsValue(0);
+  }, [currentChainId, setBuyValue, setPointsValue]);
 
   return (
     <Grid mt={4} container spacing={4}>
@@ -85,7 +90,6 @@ export const ValueTypeField = ({
             You pay
           </Typography>
           <Typography
-            onClick={() => handleMaxValue()}
             sx={{
               fontSize: 18,
               fontWeight: 700,
@@ -110,12 +114,12 @@ export const ValueTypeField = ({
             fontSize: 14,
           }}
         >
-          Points your receive
+          Points you receive
         </Typography>
         <InputField
           icon={shibartIcon}
           handleChange={handlePointsChange}
-          inputValue={pointsValue}
+          inputValue={purchaseValue.pointsValue}
         />
       </Grid>
     </Grid>

@@ -228,7 +228,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
                       variant="h4"
                       sx={{
                         color:
-                          cryptoType === item.type
+                          currentChain.tokenSymbol === item.type
                             ? palette.common.black
                             : "#8C7662",
                       }}
@@ -309,7 +309,7 @@ const StyledTab = styled(Tab)`
   align-items: center;
   gap: 4px;
   border-radius: 4px;
-  color: black !important;
+  color: #8c7662 !important;
   font-weight: 600;
   transition: all 0.3s ease-in-out;
 
@@ -319,6 +319,6 @@ const StyledTab = styled(Tab)`
 
   /* change indicator color */
   &.Mui-selected {
-    color: #8c7662 !important;
+    color: black !important;
   }
 `;
