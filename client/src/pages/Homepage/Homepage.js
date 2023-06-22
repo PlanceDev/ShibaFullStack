@@ -228,32 +228,34 @@ export const Homepage = () => {
           console.error("Error switching chain:", error);
         });
 
-      await window.ethereum
-        .request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: `0x${currentChain.chainNumber.toString(16)}`,
-              rpcUrls: [currentChain.rpcUrl],
-              chainName: currentChain.name,
-              nativeCurrency: {
-                name: currentChain.network,
-                symbol:
-                  currentChain.network === "sepolia"
-                    ? "ETH"
-                    : currentChain.network === "bsc"
-                    ? "BNB"
-                    : currentChain.network === "arbitrum"
-                    ? "ETH"
-                    : "ETH",
-                decimals: 18,
+      if (currentChain.network !== "sepolia") {
+        await window.ethereum
+          .request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: `0x${currentChain.chainNumber.toString(16)}`,
+                rpcUrls: [currentChain.rpcUrl],
+                chainName: currentChain.name,
+                nativeCurrency: {
+                  name: currentChain.network,
+                  symbol:
+                    currentChain.network === "sepolia"
+                      ? "SepoliaEth"
+                      : currentChain.network === "bsc"
+                      ? "tBNB"
+                      : currentChain.network === "arbitrum"
+                      ? "AGOR"
+                      : "ETH",
+                  decimals: 18,
+                },
               },
-            },
-          ],
-        })
-        .catch((error) => {
-          console.error("Error setting chain ID:", error);
-        });
+            ],
+          })
+          .catch((error) => {
+            console.error("Error setting chain ID:", error);
+          });
+      }
     } catch (err) {
       console.log("set chain error", err);
     }

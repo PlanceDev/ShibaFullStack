@@ -89,7 +89,7 @@ export const CryptoTypeField = ({ cryptoType }) => {
       case 0:
         dispatch(
           setCurrentChain({
-            name: "Sepolia",
+            name: "Sepolia test network",
             network: "sepolia",
             cryptoType: "s_Raiser",
             chainId: "0xaa36a7",
@@ -100,7 +100,8 @@ export const CryptoTypeField = ({ cryptoType }) => {
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl: "https://rpc2.sepolia.org",
+            rpcUrl:
+              "https://sepolia.infura.io/v3/1d62c2d15fee4c2e93097c1c4a09b25c",
           })
         );
         break;
@@ -136,7 +137,8 @@ export const CryptoTypeField = ({ cryptoType }) => {
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl: "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
+            rpcUrl:
+              "https://arb-goerli.g.alchemy.com/v2/DhGlTNEtuedPPVhAdRrKltVHnOy2_9-3",
           })
         );
         break;

@@ -249,7 +249,8 @@ export const networks = {
 };
 
 export const rpcs = {
-  "0xaa36a7": "https://rpc2.sepolia.org",
+  "0xaa36a7": "https://sepolia.infura.io/v3/1d62c2d15fee4c2e93097c1c4a09b25c",
   "0x61": "https://data-seed-prebsc-1-s1.binance.org:8545",
-  "0x66eed": "https://endpoints.omniatech.io/v1/arbitrum/goerli/public",
+  "0x66eed":
+    "https://arb-goerli.g.alchemy.com/v2/DhGlTNEtuedPPVhAdRrKltVHnOy2_9-3",
 };

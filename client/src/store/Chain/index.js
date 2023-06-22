@@ -13,7 +13,7 @@ const initialState = {
   tokenAbi: chainData.filter((obj) => obj.hasOwnProperty("s_WETH"))[0]["abi"],
   currentPrice: 0,
   nextPrice: 0,
-  rpcUrl: "https://rpc2.sepolia.org",
+  rpcUrl: "https://sepolia.infura.io/v3/1d62c2d15fee4c2e93097c1c4a09b25c",
   raisedAmount: 0,
 };
 
