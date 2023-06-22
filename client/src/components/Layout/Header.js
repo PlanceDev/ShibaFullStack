@@ -46,28 +46,6 @@ export const Header = () => {
   const [profileMenuOpen, setProfileMenuOpen] = useState(null);
   const open = Boolean(profileMenuOpen);
 
-  // Get user data from off-chain database
-  useEffect(() => {
-    if (currentUser.address) {
-      axios
-        .post(
-          `${process.env.REACT_APP_SERVER_URL}/user`,
-          {
-            address: currentUser.address,
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {
-          dispatch(
-            setCurrentUser({
-              address: account,
-              referralLink: res.data.referralCode,
-            })
-          );
-        });
-    }
-  }, [account]);
-
   return (
     <Box
       sx={{

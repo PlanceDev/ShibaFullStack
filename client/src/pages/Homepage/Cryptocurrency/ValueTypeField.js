@@ -5,7 +5,6 @@ import Web3 from "web3";
 import { InputField } from "../../../components/InputField";
 import { Context } from "../../../context/AppContext";
 
-import { addressSet } from "../../../constant/addressSet";
 import shibartIcon from "../../../assets/images/home/shibartIcon.png";
 
 import { useSelector, useDispatch } from "react-redux";

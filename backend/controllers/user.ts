@@ -7,17 +7,19 @@ import jwt from "jsonwebtoken";
 // @access  Public
 export const loginUser = async (req: Request, res: Response) => {
   try {
+    if (!req.body.address) {
+      return res.status(400).send("Please provide an address.");
+    }
+
     let user = await User.findOne({ publicKey: req.body.address });
 
     if (!user) {
       user = new User({
         publicKey: req.body.address,
       });
+
+      await user.save();
     }
-
-    await user.save();
-
-    // console.log(user);
 
     return res.status(200).send(user);
   } catch (error) {

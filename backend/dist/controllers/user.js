@@ -10,14 +10,16 @@ const User_1 = __importDefault(require("../models/User"));
 // @access  Public
 const loginUser = async (req, res) => {
     try {
+        if (!req.body.address) {
+            return res.status(400).send("Please provide an address.");
+        }
         let user = await User_1.default.findOne({ publicKey: req.body.address });
         if (!user) {
             user = new User_1.default({
                 publicKey: req.body.address,
             });
+            await user.save();
         }
-        await user.save();
-        // console.log(user);
         return res.status(200).send(user);
     }
     catch (error) {

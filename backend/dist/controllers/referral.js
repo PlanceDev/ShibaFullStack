@@ -23,7 +23,6 @@ const checkReferral = async (req, res) => {
         }, process.env.ACCESS_TOKEN_SECRET || "", {
             expiresIn: "365d",
         });
-        // console.log(accessToken);
         res.cookie("referral", accessToken, {
             maxAge: 365 * 24 * 60 * 60 * 1000,
             httpOnly: true,

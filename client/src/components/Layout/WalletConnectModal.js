@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Box, Typography, Modal, Grid, Button } from "@mui/material";
 import TrendingFlatOutlinedIcon from "@mui/icons-material/TrendingFlatOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
+import axios from "axios";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 
@@ -26,7 +26,6 @@ import placeholder1 from "../../assets/images/home/placeholder1.png";
 export const WalletConnectModal = ({
   openModal,
   setOpenModal,
-  setWalletAddress,
   setClickStatus,
 }) => {
   const dispatch = useDispatch();
@@ -67,10 +66,29 @@ export const WalletConnectModal = ({
     }
   };
 
-  // Login
+  // Login & get user data from off-chain database
   useEffect(() => {
-    console.log("this account", account);
-    dispatch(setCurrentUser({ address: account }));
+    if (account) {
+      axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/user`,
+          {
+            address: account,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          dispatch(
+            setCurrentUser({
+              address: account,
+              referralLink: res.data.referralCode,
+            })
+          );
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, [account]);
 
   return (

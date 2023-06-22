@@ -26,8 +26,6 @@ export const checkReferral = async (req: Request, res: Response) => {
       }
     );
 
-    // console.log(accessToken);
-
     res.cookie("referral", accessToken, {
       maxAge: 365 * 24 * 60 * 60 * 1000,
       httpOnly: true,

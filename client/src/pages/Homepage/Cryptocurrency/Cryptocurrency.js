@@ -14,7 +14,6 @@ import {
 
 import { CustomButton } from "../../../components/CustomButton";
 import { Context } from "../../../context/AppContext";
-import { addressSet } from "../../../constant/addressSet";
 import { useSelector, useDispatch } from "react-redux";
 import { mainContractAbi } from "../../../constant/mainContractAbi";
 
@@ -89,7 +88,7 @@ export const Cryptocurrency = () => {
           });
       }
 
-      // Send contribution transaction
+      // Send contribution transaction TODO: simplify code
       await contract.methods
         .contribute(currentChain.tokenContract, value, referralCode)
         .send({
@@ -97,7 +96,6 @@ export const Cryptocurrency = () => {
           value: value,
         })
         .then((res) => {
-          console.log(res);
           axios
             .post(
               `${process.env.REACT_APP_SERVER_URL}/contribute/`,
@@ -117,88 +115,7 @@ export const Cryptocurrency = () => {
         .catch((err) => {
           console.log(err);
         });
-
-      //  // // //
-
-      // if (nativeTokens.includes(currentChain.tokenSymbol)) {
-
-      // if (
-      //   cryptoType !== "a_Raiser" ||
-      //   cryptoType !== "b_Raiser" ||
-      //   cryptoType !== "s_Raiser"
-      // ) {
-      //   currentWContractAddress = addressSet.find(
-      //     (item) => item.chainId === currentChainId && item.estimate === true
-      //   );
-
-      //   currentContractAddress = addressSet.find(
-      //     (item) =>
-      //       item.cryptoType === cryptoType && item.chainId === currentChainId
-      //   );
-      // } else {
-      //   currentWContractAddress = addressSet.find(
-      //     (item) =>
-      //       item.cryptoType === cryptoType &&
-      //       item.chainId === currentChainId &&
-      //       item.erc20 === true
-      //   );
-
-      //   currentContractAddress = addressSet.find(
-      //     (item) => item.chainId === currentChainId && item.erc20 === false
-      //   );
-      // }
-
-      // await tokenContract?.methods
-      //   .allowance(walletAddress, currentContractAddress.testnet)
-      //   .call()
-      //   .then(async (res) => {
-      //     if (
-      //       cryptoType !== "a_Raiser" &&
-      //       cryptoType !== "b_Raiser" &&
-      //       cryptoType !== "s_Raiser"
-      //     ) {
-      //       if (Number(res) === 0) {
-      //         await tokenContract?.methods
-      //           .approve(currentContractAddress.testnet, value)
-      //           .send({ from: walletAddress })
-      //           .then(async (res1) => {
-      //             console.log("Buy Now res1", res1.blockHash);
-
-      //             await contract?.methods
-      //               .contribute(currentWContractAddress.testnet, value)
-      //               .send({ value: res, from: walletAddress })
-      //               .then((res2) => {
-      //                 console.log("Buy Now res2", res2);
-      //               });
-      //           });
-      //       }
-      //     }
-
-      //     await contract?.methods
-      //       .contribute(currentWContractAddress.testnet, res, referralCode)
-      //       .send({ value: value, from: walletAddress })
-      //       .then((res3) => {
-      //         console.log("Buy Now res3", res3);
-      //         axios
-      //           .post(
-      //             `${process.env.REACT_APP_SERVER_URL}/contribute/`,
-      //             {
-      //               address: walletAddress,
-      //               blockHash: res3.blockHash,
-      //             },
-      //             { withCredentials: true }
-      //           )
-      //           .then((res) => {
-      //             console.log(res);
-      //           })
-      //           .catch((err) => {
-      //             console.log(err);
-      //           });
-      //       })
-      //       .catch((err) => {
-      //         console.log(err);
-      //       });
-      //   });
+      // End
     } catch (err) {
       console.log(err);
     }
