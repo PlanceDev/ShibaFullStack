@@ -221,6 +221,13 @@ export const mainContractAbi = [
   },
   {
     inputs: [],
+    name: "PERIODS",
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "PERIOD_SECONDS",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
@@ -307,7 +314,7 @@ export const mainContractAbi = [
     type: "function",
   },
   {
-    inputs: [],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "encodedpp",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",

@@ -82,6 +82,7 @@ export const Homepage = () => {
       );
 
       return await contract?.launchAt().then((res) => {
+        console.log("timestamp", res);
         setEthTimeStamp(res);
       });
     } catch (err) {
@@ -279,19 +280,20 @@ export const Homepage = () => {
   // Fetch timestamp from contract and begin countdown
   useEffect(() => {
     setChainId().then(() => {
-      setPricingRounds(0);
-      getTimeStamp(currentChain.contract);
-      getPrice(currentChain.contract);
-      getNextPrice(currentChain.contract);
-      getRaisedAmount(currentChain.contract);
+      getTimeStamp(currentChain.contract.toString());
+      getPrice(currentChain.contract.toString());
+      getNextPrice(currentChain.contract.toString());
+      getRaisedAmount(currentChain.contract.toString());
 
       if (active) {
-        getUserPoints("0xa504fe0f0af7ee985cede1e72363d644adf40314");
+        getUserPoints("0xBeAcC2A8495af6eC8582451F99a5e0Ef50AB0d71");
         getUserBalance();
       }
     });
 
     const startCountdown = setInterval(() => {
+      if (ethTimeStamp === 0) return;
+
       const currentTimestamp = new Date().getTime();
       const duration = currentTimestamp / 1000 - ethTimeStamp;
       const rounds = Math.floor(duration / 720);
@@ -302,7 +304,7 @@ export const Homepage = () => {
       const minutes = Math.floor(timeToNextRound / 60) % 60;
       const seconds = timeToNextRound % 60;
 
-      if (rounds > 20) {
+      if (rounds > 30) {
         const timerValue = {
           days: 0,
           hours: 0,
@@ -311,7 +313,7 @@ export const Homepage = () => {
         };
 
         setTimerValue(timerValue);
-        setPricingRounds(20);
+        setPricingRounds(30);
 
         return clearInterval(startCountdown);
       }
