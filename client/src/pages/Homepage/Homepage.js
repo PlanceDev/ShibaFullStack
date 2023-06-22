@@ -146,8 +146,6 @@ export const Homepage = () => {
         const balance = await window.web3.eth.getBalance(accounts[0]);
         const balanceValue = window.web3.utils.fromWei(balance, "ether");
 
-        // console.log("eth balance", balanceValue);
-
         return dispatch(
           setCurrentUser({
             balance: Number(balanceValue).toFixed(6),
@@ -164,6 +162,7 @@ export const Homepage = () => {
       );
 
       const tokenBalance = await tokenContract.balanceOf(accounts[0]);
+
       const tokenBalanceValue = window.web3.utils.fromWei(
         tokenBalance.toString(),
         "ether"

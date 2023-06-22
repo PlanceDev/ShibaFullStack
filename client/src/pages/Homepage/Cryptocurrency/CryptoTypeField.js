@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
 import { chainData } from "../../../constant/parsedAbi";
 import PropTypes from "prop-types";
 import {
@@ -17,6 +17,7 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../../../store/User";
 import { setCurrentChain } from "../../../store/Chain";
+import { Context } from "../../../context/AppContext";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -67,10 +68,13 @@ export const CryptoTypeField = () => {
   const currentChain = useSelector((state) => state.chain);
   const dispatch = useDispatch();
   const [value, setValue] = React.useState(0);
+  const { setSelectedIcon, selectedIcon } = useContext(Context);
 
   // Handle Token Change
   const tokenPicker = async (chain) => {
     const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
+    // 0x4E1Afb1E58a122bf7875685c5071f4Ba318ac59C
+    // console.log(selectedChain);
 
     dispatch(
       setCurrentChain({

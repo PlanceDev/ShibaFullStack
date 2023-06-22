@@ -1,22 +1,19 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import { InputField } from "../../../components/InputField";
-import { Context } from "../../../context/AppContext";
 
 import shibartIcon from "../../../assets/images/home/shibartIcon.png";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setPurchaseValue } from "../../../store/PurchaseValue";
 import { mainContractAbi } from "../../../constant/mainContractAbi";
+import { cryptoTypes } from "../../../config/wallet_config";
 
 export const ValueTypeField = ({
-  selectedTokenIcon,
-  tokenBalance,
   buyValue,
   setBuyValue,
-  pointsValue,
   setPointsValue,
   currentChainId,
 }) => {
@@ -26,8 +23,9 @@ export const ValueTypeField = ({
   const currentUser = useSelector((state) => state.user);
   const purchaseValue = useSelector((state) => state.purchaseValue);
   const dispatch = useDispatch();
+  const [selectedTokenIcon, setSelectedTokenIcon] = useState("");
 
-  const handleBuyChange = async (e) => {
+  const updatePoints = async (value) => {
     if (!provider) {
       provider = new ethers.providers.Web3Provider(
         new Web3.providers.HttpProvider(currentChain.rpcUrl)
@@ -40,24 +38,29 @@ export const ValueTypeField = ({
       provider
     );
 
+    // Get equivalent points from contract
+    await contract
+      .estimate(currentChain.tokenContract, value)
+      .then((res) => {
+        dispatch(
+          setPurchaseValue({
+            pointsValue: Number(res.toString()),
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // When a user types in the buy field
+  const handleBuyChange = async (e) => {
     setBuyValue(e.target.value);
 
     if (e.target.value !== "") {
       let value = window.web3.utils.toWei(e.target.value.toString(), "ether");
 
-      // Get equivalent points from contract
-      await contract
-        .estimate(currentChain.tokenContract, value)
-        .then((res) => {
-          dispatch(
-            setPurchaseValue({
-              pointsValue: Number(res.toString()),
-            })
-          );
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      updatePoints(value);
     }
   };
 
@@ -69,6 +72,19 @@ export const ValueTypeField = ({
     setBuyValue(0);
     setPointsValue(0);
   }, [currentChainId, setBuyValue, setPointsValue]);
+
+  // change token image & points received on token change
+  useEffect(() => {
+    if (buyValue <= 0) return;
+
+    const tokenImage = cryptoTypes.filter(
+      (item) => item.type === currentChain.tokenSymbol
+    );
+
+    setSelectedTokenIcon(tokenImage[0].symbol1);
+
+    updatePoints(window.web3.utils.toWei(buyValue.toString(), "ether"));
+  }, [currentChain]);
 
   return (
     <Grid mt={4} container spacing={4}>

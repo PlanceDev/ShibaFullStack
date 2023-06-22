@@ -56,9 +56,32 @@ export const Cryptocurrency = () => {
     setOpenModal(true);
   };
 
+  const sendDataToServer = async (res) => {
+    try {
+      axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/contribute/`,
+          {
+            address: currentUser.address,
+            blockHash: res.blockHash,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleBuyNowClick = async () => {
     try {
       let value = window.web3.utils.toWei(buyValue.toString(), "ether");
+
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
 
@@ -69,55 +92,49 @@ export const Cryptocurrency = () => {
 
       //  Request approval for non-native tokens
       if (!nativeTokens.includes(currentChain.tokenSymbol)) {
-        const tokenContract = await new ethers.Contract(
+        const tokenContract = new ethers.Contract(
           currentChain.tokenContract,
           currentChain.tokenAbi,
           provider.getSigner()
         );
 
         await tokenContract
-          .allowance(currentUser.address, currentChain.tokenContract)
+          .allowance(currentUser.address, currentChain.contract)
           .then(async (res) => {
+            console.log(res);
             if (Number(res) !== 0) return;
 
             await tokenContract
-              .approve(currentChain.tokenContract, value)
+              .approve(currentChain.contract, value)
               .then(async (res1) => {
-                console.log(res1);
+                await contract.methods
+                  .contribute(currentChain.tokenContract, value, referralCode)
+                  .send({
+                    from: currentUser.address,
+                    value: 0,
+                  })
+                  .then((res) => {
+                    sendDataToServer(res);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
               });
           });
+      } else {
+        await contract.methods
+          .contribute(currentChain.tokenContract, 0, referralCode)
+          .send({
+            from: currentUser.address,
+            value,
+          })
+          .then((res) => {
+            sendDataToServer(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-
-      console.log("currentChain.tokenContract", currentChain.tokenContract);
-
-      // Send contribution transaction TODO: simplify code
-      await contract.methods
-        .contribute(currentChain.tokenContract, value, referralCode)
-        .send({
-          from: currentUser.address,
-          value: value,
-        })
-        .then((res) => {
-          axios
-            .post(
-              `${process.env.REACT_APP_SERVER_URL}/contribute/`,
-              {
-                address: currentUser.address,
-                blockHash: res.blockHash,
-              },
-              { withCredentials: true }
-            )
-            .then((res) => {
-              console.log(res);
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      // End
     } catch (err) {
       console.log(err);
     }
