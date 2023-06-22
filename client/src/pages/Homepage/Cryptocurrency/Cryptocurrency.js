@@ -88,6 +88,8 @@ export const Cryptocurrency = () => {
           });
       }
 
+      console.log("currentChain.tokenContract", currentChain.tokenContract);
+
       // Send contribution transaction TODO: simplify code
       await contract.methods
         .contribute(currentChain.tokenContract, value, referralCode)
