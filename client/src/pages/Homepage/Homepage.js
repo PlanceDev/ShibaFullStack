@@ -46,7 +46,8 @@ export const Homepage = () => {
   } = useWeb3React();
 
   const [ethTimeStamp, setEthTimeStamp] = useState(0);
-  const { setTimerValue, setReferralCode } = useContext(Context);
+  const { setTimerValue, setReferralCode, pricingRounds, setPricingRounds } =
+    useContext(Context);
 
   // Set referral code from url if it exists
   useEffect(() => {
@@ -278,6 +279,7 @@ export const Homepage = () => {
   // Fetch timestamp from contract and begin countdown
   useEffect(() => {
     setChainId().then(() => {
+      setPricingRounds(0);
       getTimeStamp(currentChain.contract);
       getPrice(currentChain.contract);
       getNextPrice(currentChain.contract);
@@ -291,8 +293,32 @@ export const Homepage = () => {
 
     const startCountdown = setInterval(() => {
       const currentTimestamp = new Date().getTime();
-      const duration = (currentTimestamp / 1000 - ethTimeStamp) / 24 / 60 / 60;
-      setTimerValue(20 - duration.toFixed(5));
+      const duration = currentTimestamp / 1000 - ethTimeStamp;
+      const rounds = Math.floor(duration / 720);
+      const timeToNextRound = Math.floor(720 - (duration % 720));
+
+      const days = Math.floor(timeToNextRound / 60 / 60 / 24);
+      const hours = Math.floor(timeToNextRound / 60 / 60) % 24;
+      const minutes = Math.floor(timeToNextRound / 60) % 60;
+      const seconds = timeToNextRound % 60;
+
+      // console.log("days", days);
+      // console.log("hours", hours);
+      // console.log("minutes", minutes);
+      // console.log("seconds", seconds);
+
+      if (rounds > pricingRounds) {
+        setPricingRounds(rounds);
+      }
+
+      const timerValue = {
+        days,
+        hours,
+        minutes,
+        seconds,
+      };
+
+      setTimerValue(timerValue);
     }, 1000);
 
     return () => clearInterval(startCountdown);

@@ -1,7 +1,8 @@
 import React from "react";
+import { useEffect, useContext, useState } from "react";
 import { Box, Typography } from "@mui/material";
-
 import { palette } from "../../../themes";
+import { Context } from "../../../context/AppContext";
 
 const durations = [
   { value: 4, time: "days" },
@@ -11,18 +12,21 @@ const durations = [
 ];
 
 export const DurationField = ({ timerValue }) => {
+  const { pricingRounds, setPricingRounds } = useContext(Context);
+
   return (
     <Box mt={6}>
       <Typography
         variant="h3"
         sx={{
-          fontSize: 20,
+          fontSize: 16,
           color: "#525252 !important",
           textAlign: "center",
         }}
       >
-        Time Until Price Increase
+        Time Until Price Increase ({pricingRounds} / 20)
       </Typography>
+
       <Box
         mt={1}
         display={"flex"}
@@ -54,27 +58,14 @@ export const DurationField = ({ timerValue }) => {
               }}
             >
               {i === 0
-                ? parseInt(timerValue)
+                ? parseInt(timerValue.days || 0)
                 : i === 1
-                ? parseInt((timerValue - parseInt(timerValue)) * 24)
+                ? parseInt(timerValue.hours || 0)
                 : i === 2
-                ? parseInt(
-                    ((timerValue - parseInt(timerValue)) * 24 -
-                      parseInt((timerValue - parseInt(timerValue)) * 24)) *
-                      60
-                  )
-                : parseInt(
-                    (((timerValue - parseInt(timerValue)) * 24 -
-                      parseInt((timerValue - parseInt(timerValue)) * 24)) *
-                      60 -
-                      parseInt(
-                        ((timerValue - parseInt(timerValue)) * 24 -
-                          parseInt((timerValue - parseInt(timerValue)) * 24)) *
-                          60
-                      )) *
-                      60
-                  )}
+                ? parseInt(timerValue.minutes || 0)
+                : parseInt(timerValue.seconds || 0)}
             </Typography>
+
             <Typography
               sx={{
                 fontSize: 16,

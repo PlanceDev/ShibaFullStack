@@ -25,6 +25,7 @@ const AppProvider = ({ children }) => {
   const [referralLink, setReferralLink] = useState(
     localStorage.getItem("referralLink") || "undefined"
   );
+  const [pricingRounds, setPricingRounds] = useState(0);
 
   return (
     <Context.Provider
@@ -53,7 +54,6 @@ const AppProvider = ({ children }) => {
         setRaiseValue,
         walletAddress,
         setWalletAddress,
-
         chainStatus,
         setChainStatus,
         clickStatus,
@@ -62,6 +62,8 @@ const AppProvider = ({ children }) => {
         setReferralCode,
         referralLink,
         setReferralLink,
+        pricingRounds,
+        setPricingRounds,
       }}
     >
       {children}
