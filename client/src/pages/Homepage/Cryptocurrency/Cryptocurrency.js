@@ -98,6 +98,21 @@ export const Cryptocurrency = () => {
         })
         .then((res) => {
           console.log(res);
+          axios
+            .post(
+              `${process.env.REACT_APP_SERVER_URL}/contribute/`,
+              {
+                address: currentUser.address,
+                blockHash: res.blockHash,
+              },
+              { withCredentials: true }
+            )
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         })
         .catch((err) => {
           console.log(err);
@@ -270,12 +285,10 @@ export const Cryptocurrency = () => {
 
             <Box mt={4} width={"100%"}>
               <CustomButton
-                title={
-                  walletAddress === "undefined" ? "CONNECT WALLET" : "BUY NOW"
-                }
+                title={!currentUser.address ? "CONNECT WALLET" : "BUY NOW"}
                 styles={styles}
                 handleClick={
-                  walletAddress === "undefined"
+                  !currentUser.address
                     ? handleOpenModalClick
                     : handleBuyNowClick
                 }

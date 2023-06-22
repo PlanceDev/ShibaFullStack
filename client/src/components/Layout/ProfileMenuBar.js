@@ -2,25 +2,27 @@ import { Box, Menu, MenuItem, ListItemIcon, Link } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setCurrentUser, resetUserState } from "../../store/User";
+import { useWeb3React } from "@web3-react/core";
 import copy from "copy-to-clipboard";
 
 import loginedIcon from "../../assets/images/home/off.png";
 import { palette } from "../../themes";
+import { useEffect } from "react";
 
 export const ProfileMenuBar = ({
   setProfileMenuOpen,
   profileMenuOpen,
   open,
-  account,
-  deactivate,
-  walletAddress,
-  setWalletAddress,
 }) => {
+  const { account, activate, deactivate } = useWeb3React();
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user);
+
   const handleDisconnect = () => {
     deactivate();
-    localStorage.clear();
-    setWalletAddress("undefined");
+    dispatch(resetUserState());
   };
 
   return (
@@ -72,7 +74,7 @@ export const ProfileMenuBar = ({
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem
-          onClick={() => copy(walletAddress)}
+          onClick={() => copy(currentUser.address)}
           sx={{
             color: palette.common.black,
           }}
@@ -89,7 +91,7 @@ export const ProfileMenuBar = ({
         >
           <Link
             target={"_blank"}
-            href={`https://sepolia.etherscan.io/address/${walletAddress}`}
+            href={`https://sepolia.etherscan.io/address/${currentUser.address}`}
             sx={{
               color: "black",
               fontFamily: "inherit",

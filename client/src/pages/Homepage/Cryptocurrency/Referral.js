@@ -4,22 +4,23 @@ import { palette } from "../../../themes";
 import { Context } from "../../../context/AppContext";
 import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
+import { useSelector, useDispatch } from "react-redux";
 
 export const Referral = () => {
-  const { walletAddress, referralLink, setReferralLink } = useContext(Context);
   const { account, activate } = useWeb3React();
+  const currentUser = useSelector((state) => state.user);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(
-      `${process.env.REACT_APP_HOST_URL}/?referral=${referralLink}`
+      `${process.env.REACT_APP_HOST_URL}/?referral=${currentUser.referralLink}`
     );
   };
 
   return (
     <>
-      {referralLink && (
+      {currentUser.referralLink && (
         <>
-          {walletAddress !== "undefined" && (
+          {currentUser.address && (
             <Box
               p={3}
               mt={6}

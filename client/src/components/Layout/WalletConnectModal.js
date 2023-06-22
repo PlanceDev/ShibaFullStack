@@ -8,6 +8,9 @@ import { ethers } from "ethers";
 
 import { palette } from "../../themes";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setCurrentUser } from "../../store/User";
+
 import {
   walletLists,
   walletconnect,
@@ -26,23 +29,30 @@ export const WalletConnectModal = ({
   setWalletAddress,
   setClickStatus,
 }) => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.user);
+
   const { account, activate } = useWeb3React();
 
   const connetHandler = async (provider) => {
     try {
       setClickStatus(true);
+
       if (provider === walletconnect) {
         await activate(provider);
         setOpenModal(false);
       }
+
       if (provider === injected) {
         if (window.ethereum === undefined) {
           alert("Please install metamask ");
         }
+
         const provider1 = new ethers.providers.Web3Provider(
           window.ethereum,
           "any"
         );
+
         await provider1.send("eth_requestAccounts", []);
         activate(injected);
         setOpenModal(false);
@@ -57,12 +67,11 @@ export const WalletConnectModal = ({
     }
   };
 
+  // Login
   useEffect(() => {
-    if (account !== undefined) {
-      localStorage.setItem("wallet account", account);
-      setWalletAddress(account);
-    }
-  }, [account, setWalletAddress]);
+    console.log("this account", account);
+    dispatch(setCurrentUser({ address: account }));
+  }, [account]);
 
   return (
     <Modal

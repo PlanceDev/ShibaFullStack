@@ -41,39 +41,31 @@ export const Header = () => {
     walletAddress,
     setWalletAddress,
     setClickStatus,
-    referralCode,
-    setReferralCode,
-    referralLink,
-    setReferralLink,
   } = useContext(Context);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(null);
   const open = Boolean(profileMenuOpen);
 
+  // Get user data from off-chain database
   useEffect(() => {
-    console.log("account", account);
-    console.log("currentUser", currentUser);
-    // if (account) {
-    //   axios
-    //     .post(
-    //       `${process.env.REACT_APP_SERVER_URL}/user`,
-    //       {
-    //         address: account,
-    //       },
-    //       { withCredentials: true }
-    //     )
-    //     .then((res) => {
-    //       dispatch(
-    //         setCurrentUser({
-    //           address: account,
-    //           referralLink: res.data.referralCode,
-    //         })
-    //       );
-    //       setReferralLink(res.data.referralCode);
-    //       localStorage.setItem("referralLink", res.data.referralCode || "");
-    //       setWalletAddress(account);
-    //     });
-    // }
+    if (currentUser.address) {
+      axios
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/user`,
+          {
+            address: currentUser.address,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+          dispatch(
+            setCurrentUser({
+              address: account,
+              referralLink: res.data.referralCode,
+            })
+          );
+        });
+    }
   }, [account]);
 
   return (
@@ -144,7 +136,7 @@ export const Header = () => {
               )}
             </Box>
           ))}
-          {walletAddress === "undefined" ? (
+          {!currentUser.address ? (
             <Button
               variant="h5"
               onClick={() => setOpenModal(true)}
@@ -167,7 +159,6 @@ export const Header = () => {
               profileMenuOpen={profileMenuOpen}
               open={open}
               account={account}
-              deactivate={deactivate}
               setWalletAddress={setWalletAddress}
               walletAddress={walletAddress}
             />

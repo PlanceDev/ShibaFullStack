@@ -62,7 +62,7 @@ function a11yProps(index) {
   };
 }
 
-export const CryptoTypeField = ({ cryptoType }) => {
+export const CryptoTypeField = () => {
   const currentUser = useSelector((state) => state.user);
   const currentChain = useSelector((state) => state.chain);
   const dispatch = useDispatch();

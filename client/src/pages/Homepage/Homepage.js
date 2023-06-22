@@ -15,11 +15,9 @@ import {
   Roadmap,
   TokenAirdrop,
 } from "../Homepage";
-import { addressSet } from "../../constant/addressSet";
-import { testnetABI as ABI } from "../../constant/contractABI";
-import { tokenContractABI as TokenABI } from "../../constant/contractABI";
 import { mainContractAbi } from "../../constant/mainContractAbi";
 import { Context } from "../../context/AppContext";
+import { parsedAbi } from "../../constant/parsedAbi";
 
 let provider;
 
@@ -49,6 +47,22 @@ export const Homepage = () => {
 
   const [ethTimeStamp, setEthTimeStamp] = useState(0);
   const { setTimerValue, setReferralCode } = useContext(Context);
+
+  // Set referral code from url if it exists
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const paramValue = searchParams.get("referral");
+
+    if (!paramValue) return;
+
+    axios
+      .get(`${process.env.REACT_APP_SERVER_URL}/referral/${paramValue}`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setReferralCode(paramValue);
+      });
+  }, []);
 
   // Fetch current chain and set provider
   useEffect(() => {
@@ -130,7 +144,7 @@ export const Homepage = () => {
         const balance = await window.web3.eth.getBalance(accounts[0]);
         const balanceValue = window.web3.utils.fromWei(balance, "ether");
 
-        console.log("eth balance", balanceValue);
+        // console.log("eth balance", balanceValue);
 
         return dispatch(
           setCurrentUser({
@@ -270,7 +284,7 @@ export const Homepage = () => {
       getRaisedAmount(currentChain.contract);
 
       if (active) {
-        getUserPoints(currentChain.contract);
+        getUserPoints("0xa504fe0f0af7ee985cede1e72363d644adf40314");
         getUserBalance();
       }
     });
@@ -282,23 +296,7 @@ export const Homepage = () => {
     }, 1000);
 
     return () => clearInterval(startCountdown);
-  }, [currentChain, account, ethTimeStamp]);
-
-  // Set referral code from url if it exists
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const paramValue = searchParams.get("referral");
-
-    if (!paramValue) return;
-
-    axios
-      .get(`${process.env.REACT_APP_SERVER_URL}/referral/${paramValue}`, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setReferralCode(paramValue);
-      });
-  }, []);
+  }, [currentChain, account, active, currentUser]);
 
   // Set web3 on load
   useEffect(() => {
@@ -306,16 +304,6 @@ export const Homepage = () => {
       window.web3 = new Web3(window.ethereum);
     }
   }, []);
-
-  // disconnect wallet on refresh
-  useEffect(() => {
-    if (!active) {
-      dispatch(
-        setCurrentUser({ address: "", balance: 0, points: 0, referralLink: "" })
-      );
-      return localStorage.clear();
-    }
-  }, [active]);
 
   // useEffect(() => {
   //   const effect = async () => {

@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  address: localStorage.getItem("wallet account") || "",
+  address: "",
   balance: 0,
   points: 0,
-  referralLink: localStorage.getItem("referralLink") || "",
+  referralLink: "",
 };
 
 const userSlice = createSlice({
@@ -17,9 +17,16 @@ const userSlice = createSlice({
       state.points = action.payload.points || state.points;
       state.referralLink = action.payload.referralLink || state.referralLink;
     },
+
+    resetUserState: (state) => {
+      state.address = initialState.address;
+      state.balance = initialState.balance;
+      state.points = initialState.points;
+      state.referralLink = initialState.referralLink;
+    },
   },
 });
 
-export const { setCurrentUser, setLoading, setError } = userSlice.actions;
+export const { setCurrentUser, resetUserState } = userSlice.actions;
 
 export default userSlice.reducer;

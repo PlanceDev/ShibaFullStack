@@ -10,20 +10,9 @@ const valueTypes = [
   { name: "Your Points" },
 ];
 
-export const TokenBalanceField = ({
-  points,
-  tokenBalance,
-  currentPrice,
-  nextPrice,
-  walletAddress,
-}) => {
+export const TokenBalanceField = () => {
   const currentUser = useSelector((state) => state.user);
   const currentChain = useSelector((state) => state.chain);
-
-  // useEffect(() => {
-  //   console.log("currentUser", currentUser);
-  //   console.log("currentChain", currentChain);
-  // }, [currentChain]);
 
   return (
     <Box
@@ -67,14 +56,14 @@ export const TokenBalanceField = ({
             }}
           >
             {i === 0
-              ? walletAddress === "undefined"
+              ? !currentUser.address
                 ? "-"
                 : Number(currentUser.balance).toFixed(7)
               : i === 1
               ? `$ ${Number(currentChain.currentPrice / 10000).toFixed(7)}`
               : i === 2
               ? `$ ${Number(currentChain.nextPrice / 10000).toFixed(7)}`
-              : i === 3 && walletAddress === "undefined"
+              : i === 3 && !currentUser.address
               ? "-"
               : currentUser.points}
           </Typography>
