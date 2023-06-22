@@ -105,7 +105,10 @@ export const Cryptocurrency = () => {
               await tokenContract.approve(currentChain.contract, res);
             }
 
-            if (currentChain.tokenSymbol.endsWith("USDC" || "USDT")) {
+            if (
+              currentChain.tokenSymbol.endsWith("USDC") ||
+              currentChain.tokenSymbol.endsWith("USDT")
+            ) {
               value = window.web3.utils.toWei(
                 (buyValue * 1000000).toString(),
                 "wei"

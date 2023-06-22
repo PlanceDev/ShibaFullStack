@@ -75,15 +75,16 @@ export const ValueTypeField = ({
 
   // change token image & points received on token change
   useEffect(() => {
-    if (buyValue <= 0) return;
-
     const tokenImage = cryptoTypes.filter(
       (item) => item.type === currentChain.tokenSymbol
     );
 
     setSelectedTokenIcon(tokenImage[0].symbol1);
 
-    updatePoints(window.web3.utils.toWei(buyValue.toString(), "ether"));
+    // Only update points if the user has entered a value in token field
+    if (buyValue > 0) {
+      updatePoints(window.web3.utils.toWei(buyValue.toString(), "ether"));
+    }
   }, [currentChain]);
 
   return (

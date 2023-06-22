@@ -285,7 +285,7 @@ export const Homepage = () => {
       getRaisedAmount(currentChain.contract.toString());
 
       if (active) {
-        getUserPoints("0xBeAcC2A8495af6eC8582451F99a5e0Ef50AB0d71");
+        getUserPoints("0xA504FE0F0aF7eE985cEde1e72363d644aDF40314");
         getUserBalance();
       }
     });
@@ -295,7 +295,7 @@ export const Homepage = () => {
 
       const currentTimestamp = new Date().getTime();
       const duration = currentTimestamp / 1000 - ethTimeStamp;
-      const rounds = Math.floor(duration / 720);
+      const rounds = Math.floor(duration / 720) + 1;
       const timeToNextRound = Math.floor(720 - (duration % 720));
 
       const days = Math.floor(timeToNextRound / 60 / 60 / 24);
