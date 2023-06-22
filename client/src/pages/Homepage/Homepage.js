@@ -302,10 +302,19 @@ export const Homepage = () => {
       const minutes = Math.floor(timeToNextRound / 60) % 60;
       const seconds = timeToNextRound % 60;
 
-      // console.log("days", days);
-      // console.log("hours", hours);
-      // console.log("minutes", minutes);
-      // console.log("seconds", seconds);
+      if (rounds > 20) {
+        const timerValue = {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        };
+
+        setTimerValue(timerValue);
+        setPricingRounds(20);
+
+        return clearInterval(startCountdown);
+      }
 
       if (rounds > pricingRounds) {
         setPricingRounds(rounds);
