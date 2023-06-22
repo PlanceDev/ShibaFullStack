@@ -101,24 +101,35 @@ export const Cryptocurrency = () => {
         await tokenContract
           .allowance(currentUser.address, currentChain.contract)
           .then(async (res) => {
-            console.log(res);
-            if (Number(res) !== 0) return;
+            if (Number(res.toString()) <= 0) {
+              await tokenContract.approve(currentChain.contract, res);
+            }
 
-            await tokenContract
-              .approve(currentChain.contract, value)
-              .then(async (res1) => {
-                await contract.methods
-                  .contribute(currentChain.tokenContract, value, referralCode)
-                  .send({
-                    from: currentUser.address,
-                    value: 0,
-                  })
-                  .then((res) => {
-                    sendDataToServer(res);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+            if (currentChain.tokenSymbol.endsWith("USDC" || "USDT")) {
+              value = window.web3.utils.toWei(
+                (buyValue * 1000000).toString(),
+                "wei"
+              );
+            }
+
+            if (currentChain.tokenSymbol.endsWith("BTC")) {
+              value = window.web3.utils.toWei(
+                (buyValue * 100000000).toString(),
+                "wei"
+              );
+            }
+
+            await contract.methods
+              .contribute(currentChain.tokenContract, value, referralCode)
+              .send({
+                from: currentUser.address,
+                value: window.web3.utils.toWei("0.00001", "ether"),
+              })
+              .then((res) => {
+                sendDataToServer(res);
+              })
+              .catch((err) => {
+                console.log(err);
               });
           });
       } else {
