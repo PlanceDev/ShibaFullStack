@@ -73,16 +73,10 @@ export const Homepage = () => {
       getRaised(currentChain.contract, provider, dispatch, setCurrentChain);
 
       if (active) {
+        getBalance(currentChain, provider, dispatch, setCurrentUser);
+
         getPoints(
           currentChain.contract,
-          provider,
-          dispatch,
-          currentUser,
-          setCurrentUser
-        );
-
-        getBalance(
-          currentChain,
           provider,
           dispatch,
           currentUser,
