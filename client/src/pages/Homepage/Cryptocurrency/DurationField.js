@@ -24,8 +24,7 @@ export const DurationField = ({ timerValue }) => {
           textAlign: "center",
         }}
       >
-        {/* Time Until Price Increase ({pricingRounds} / 30) */}
-        Time Until Price Increase
+        Time Until Price Increase ({pricingRounds} / 30)
       </Typography>
 
       <Box
