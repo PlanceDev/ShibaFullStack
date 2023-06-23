@@ -53,6 +53,25 @@ export const mainContractAbi = [
     inputs: [
       {
         indexed: true,
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "Distributed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: "uint32",
         name: "launchTimestamp",
         type: "uint32",
@@ -480,7 +499,7 @@ export const mainContractAbi = [
   {
     inputs: [],
     name: "token",
-    outputs: [{ internalType: "contract IShibart", name: "", type: "address" }],
+    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },

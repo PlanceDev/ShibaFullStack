@@ -42,7 +42,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box key={index} sx={{ p: 3 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -78,15 +78,15 @@ export const CryptoTypeField = () => {
     const handleNamingErrorIssue = () => {
       if (selectedChain[0][chain] === currentChain.contract) {
         if (chain === "s_Raiser") {
-          return "0x99e78fbcfa087f72ddc927aa35da148518416959";
+          return process.env.REACT_APP_WETH_CONTRACT;
         }
 
         if (chain === "a_Raiser") {
-          return "0xb942face0d4fe5724d0192f6999c5192a53450ee";
+          return process.env.REACT_APP_WARB_CONTRACT;
         }
 
         if (chain === "b_Raiser") {
-          return "0x8a9043da48f2ec50a35cef0ec26932e61db1b2a3";
+          return process.env.REACT_APP_WBSC_CONTRACT;
         }
       }
 
@@ -115,14 +115,13 @@ export const CryptoTypeField = () => {
             cryptoType: "s_Raiser",
             chainId: "0xaa36a7",
             chainNumber: 11155111,
-            contract: "0xA504FE0F0aF7eE985cEde1e72363d644aDF40314",
-            tokenContract: "0x99e78fbcfa087f72ddc927aa35da148518416959",
+            contract: process.env.REACT_APP_ETH_CONTRACT,
+            tokenContract: process.env.REACT_APP_WETH_CONTRACT,
             tokenSymbol: "s_Raiser",
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl:
-              "https://sepolia.infura.io/v3/1d62c2d15fee4c2e93097c1c4a09b25c",
+            rpcUrl: process.env.REACT_APP_ETH_RPC,
           })
         );
         break;
@@ -134,13 +133,13 @@ export const CryptoTypeField = () => {
             cryptoType: "b_Raiser",
             chainId: "0x61",
             chainNumber: 97,
-            contract: "0xfdD5ed8DD0E19747a74133F8A0bB02E5126599e4",
-            tokenContract: "0x8a9043da48f2ec50a35cef0ec26932e61db1b2a3",
+            contract: process.env.REACT_APP_BSC_CONTRACT,
+            tokenContract: process.env.REACT_APP_WBSC_CONTRACT,
             tokenSymbol: "b_Raiser",
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+            rpcUrl: process.env.REACT_APP_BSC_RPC,
           })
         );
         break;
@@ -152,14 +151,13 @@ export const CryptoTypeField = () => {
             cryptoType: "a_Raiser",
             chainId: "0x66eed",
             chainNumber: 421613,
-            contract: "0x3c1c6821D293F98312c0EC8011f22af5C7F05241",
-            tokenContract: "0xb942face0d4fe5724d0192f6999c5192a53450ee",
+            contract: process.env.REACT_APP_ARB_CONTRACT,
+            tokenContract: process.env.REACT_APP_WARB_CONTRACT,
             tokenSymbol: "a_Raiser",
             tokenAbi: [],
             currentPrice: 0,
             nextPrice: 0,
-            rpcUrl:
-              "https://arb-goerli.g.alchemy.com/v2/DhGlTNEtuedPPVhAdRrKltVHnOy2_9-3",
+            rpcUrl: process.env.REACT_APP_ARB_RPC,
           })
         );
         break;
@@ -194,15 +192,15 @@ export const CryptoTypeField = () => {
               },
             }}
           >
-            <StyledTab label="Ethereum" {...a11yProps(0)} />
-            <StyledTab label="BSC" {...a11yProps(1)} />
-            <StyledTab label="Arbitrum" {...a11yProps(2)} />
+            <StyledTab key={"eth"} label="Ethereum" {...a11yProps(0)} />
+            <StyledTab key={"bsc"} label="BSC" {...a11yProps(1)} />
+            <StyledTab key={"arb"} label="Arbitrum" {...a11yProps(2)} />
           </Tabs>
         </Box>
 
         {/* Token Options */}
         <Box
-          display={{ sm: "flex", xs: "none" }}
+          display={{ sm: "flex", xs: "flex" }}
           justifyContent={"center"}
           alignItems={"center"}
           flexWrap={"wrap"}
@@ -212,117 +210,64 @@ export const CryptoTypeField = () => {
           {cryptoTypes
             .filter((token) => token.networkType === currentChain.network)
             .map((item, i) => (
-              <>
-                <Button
-                  key={i}
-                  onClick={() => tokenPicker(item.type)}
-                  sx={{
-                    width: "110px",
-                    background:
-                      currentChain.tokenSymbol === item.type
-                        ? palette.common.white
-                        : "",
-                    border: "2px solid #3C2C2D",
-                    borderRadius: "4px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "8px",
-                    "&:hover": {
-                      background: "#f6e1ce",
-                    },
-                  }}
+              <Button
+                key={item.type}
+                onClick={() => tokenPicker(item.type)}
+                sx={{
+                  width: "110px",
+                  background:
+                    currentChain.tokenSymbol === item.type
+                      ? palette.common.white
+                      : "",
+                  border: "2px solid #3C2C2D",
+                  borderRadius: "4px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                  "&:hover": {
+                    background: "#f6e1ce",
+                  },
+                }}
+              >
+                <Box
+                  component={"img"}
+                  alt=""
+                  src={
+                    currentChain.tokenSymbol !== item.type
+                      ? item.symbol
+                      : item.symbol1
+                  }
+                />
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  alignItems={"center"}
                 >
-                  <Box
-                    component={"img"}
-                    alt=""
-                    src={
-                      currentChain.tokenSymbol !== item.type
-                        ? item.symbol
-                        : item.symbol1
-                    }
-                  />
-                  <Box
-                    display={"flex"}
-                    flexDirection={"column"}
-                    alignItems={"center"}
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      color:
+                        currentChain.tokenSymbol === item.type
+                          ? palette.common.black
+                          : "#8C7662",
+                    }}
                   >
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        color:
-                          currentChain.tokenSymbol === item.type
-                            ? palette.common.black
-                            : "#8C7662",
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        color: "#8C7662 !important",
-                      }}
-                    >
-                      {item.token}
-                    </Typography>
-                  </Box>
-                </Button>
-              </>
+                    {item.name}
+                  </Typography>
+                  <Typography
+                    variant="h5"
+                    sx={{
+                      color: "#8C7662 !important",
+                    }}
+                  >
+                    {item.token}
+                  </Typography>
+                </Box>
+              </Button>
             ))}
         </Box>
       </Box>
-
-      {/* <Box display={{ sm: "none", xs: "block" }}>
-        <FormControl sx={{ width: "100%" }}>
-          <Select
-            sx={{
-              border: "2px solid #202025",
-              borderRadius: "4px",
-            }}
-            labelId="demo-multiple-name-label"
-            id="demo-multiple-name"
-            value={cryptoType}
-            // onChange={handleChange}
-            MenuProps={MenuProps}
-          >
-            {cryptoTypes.map((item, i) => (
-              <MenuItem
-                key={i}
-                value={item.type}
-                // onClick={() => setSelectedTokenIcon(item.symbol1)}
-              >
-                <Box
-                  display={"flex"}
-                  justifyContent={"cemter"}
-                  alignItems={"center"}
-                  gap={2}
-                >
-                  <Box component={"img"} src={item.symbol1} alt="" />
-                  <Box>
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        color: palette.common.black,
-                      }}
-                    >
-                      {item.name}
-                    </Typography>
-                    <Typography
-                      variant="h5"
-                      sx={{
-                        color: "#8C7662 !important",
-                      }}
-                    >
-                      {item.token}
-                    </Typography>
-                  </Box>
-                </Box>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box> */}
     </>
   );
 };

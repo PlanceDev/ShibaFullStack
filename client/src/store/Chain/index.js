@@ -7,13 +7,13 @@ const initialState = {
   cryptoType: "s_Raiser",
   chainId: "0xaa36a7",
   chainNumber: 11155111,
-  contract: "0xA504FE0F0aF7eE985cEde1e72363d644aDF40314",
-  tokenContract: "0x99e78fbcfa087f72ddc927aa35da148518416959",
+  contract: process.env.REACT_APP_ETH_CONTRACT,
+  tokenContract: process.env.REACT_APP_WETH_CONTRACT,
   tokenSymbol: "s_Raiser",
   tokenAbi: chainData.filter((obj) => obj.hasOwnProperty("s_WETH"))[0]["abi"],
   currentPrice: 0,
   nextPrice: 0,
-  rpcUrl: "https://sepolia.infura.io/v3/1d62c2d15fee4c2e93097c1c4a09b25c",
+  rpcUrl: process.env.REACT_APP_ETH_RPC,
   raisedAmount: 0,
 };
 

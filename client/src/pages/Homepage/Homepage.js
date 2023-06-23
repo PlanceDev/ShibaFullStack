@@ -18,36 +18,28 @@ import {
 import { mainContractAbi } from "../../constant/mainContractAbi";
 import { Context } from "../../context/AppContext";
 import { parsedAbi } from "../../constant/parsedAbi";
+import {
+  getPrice,
+  getNextPrice,
+  getTimeStamp,
+  getRaised,
+  getPoints,
+  getBalance,
+} from "./utils";
 
 let provider;
 
-// let provider = new ethers.providers.Web3Provider(window.ethereum);
-
-// let provider = new ethers.providers.Web3Provider(
-//   new Web3.providers.HttpProvider(
-//     "https://data-seed-prebsc-1-s1.binance.org:8545/"
-//   )
-// );
-
 export const Homepage = () => {
   const location = useLocation();
+  const { active, account } = useWeb3React();
+  const { setTimerValue, setReferralCode, pricingRounds, setPricingRounds } =
+    useContext(Context);
+
   const currentUser = useSelector((state) => state.user);
   const currentChain = useSelector((state) => state.chain);
   const dispatch = useDispatch();
 
-  const {
-    library,
-    active,
-    chainId,
-    activate,
-    account,
-    deactivate,
-    chainId: currentChainId,
-  } = useWeb3React();
-
   const [ethTimeStamp, setEthTimeStamp] = useState(0);
-  const { setTimerValue, setReferralCode, pricingRounds, setPricingRounds } =
-    useContext(Context);
 
   // Set referral code from url if it exists
   useEffect(() => {
@@ -72,251 +64,39 @@ export const Homepage = () => {
     );
   }, [currentChain]);
 
-  // Fetch timestamp from contract
-  const getTimeStamp = async (contractAddress) => {
+  // Fetch data from contract and set redux state
+  const setParams = () => {
     try {
-      const contract = new ethers.Contract(
-        contractAddress,
-        mainContractAbi,
-        provider
-      );
+      getTimeStamp(currentChain.contract, provider, setEthTimeStamp);
+      getPrice(currentChain.contract, provider, dispatch, setCurrentChain);
+      getNextPrice(currentChain.contract, provider, dispatch, setCurrentChain);
+      getRaised(currentChain.contract, provider, dispatch, setCurrentChain);
 
-      return await contract?.launchAt().then((res) => {
-        setEthTimeStamp(res);
-      });
-    } catch (err) {
-      console.log("Timestamp error", err);
-    }
-  };
-
-  // Fetch current price from contract
-  const getPrice = async (contractAddress) => {
-    try {
-      const contract = new ethers.Contract(
-        contractAddress,
-        mainContractAbi,
-        provider
-      );
-
-      return await contract?.currentPrice().then((res) => {
-        dispatch(
-          setCurrentChain({
-            currentPrice: window.web3.utils.fromWei(res.toString(), "ether"),
-          })
+      if (active) {
+        getPoints(
+          currentChain.contract,
+          provider,
+          dispatch,
+          currentUser,
+          setCurrentUser
         );
-      });
-    } catch (err) {
-      // console.log("get price error", err);
-    }
-  };
 
-  // Fetch next price from contract
-  const getNextPrice = async (contractAddress) => {
-    try {
-      const contract = new ethers.Contract(
-        contractAddress,
-        mainContractAbi,
-        provider
-      );
-
-      return await contract?.nextPrice().then((res) => {
-        dispatch(
-          setCurrentChain({
-            nextPrice: window.web3.utils.fromWei(res.toString(), "ether"),
-          })
-        );
-      });
-    } catch (err) {
-      // console.log("get next price error", err);
-    }
-  };
-
-  // Fetch user balance from wallet
-  const getUserBalance = async () => {
-    try {
-      if (!window.web3.eth) return;
-
-      let accounts = await window.web3.eth.getAccounts();
-
-      // Get Native balance
-      let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
-
-      if (nativeTokens.includes(currentChain.tokenSymbol)) {
-        const balance = await window.web3.eth.getBalance(accounts[0]);
-        const balanceValue = window.web3.utils.fromWei(balance, "ether");
-
-        return dispatch(
-          setCurrentUser({
-            balance: Number(balanceValue).toFixed(6),
-          })
+        getBalance(
+          currentChain,
+          provider,
+          dispatch,
+          currentUser,
+          setCurrentUser
         );
       }
-
-      // Get ERC-20 Token balance
-      const tokenAddress = currentChain.tokenContract;
-      const tokenContract = new ethers.Contract(
-        tokenAddress,
-        currentChain.tokenAbi,
-        provider
-      );
-
-      const tokenBalance = await tokenContract.balanceOf(accounts[0]);
-
-      // If token is ETH, divide by 1e18
-      let tokenBalanceValue;
-
-      // If token is USDC or USDT, divide by 1e6
-      if (
-        currentChain.tokenSymbol.endsWith("USDC") ||
-        currentChain.tokenSymbol.endsWith("USDT")
-      ) {
-        tokenBalanceValue = Number(tokenBalance) / 1e6;
-
-        return dispatch(
-          setCurrentUser({
-            balance: Number(tokenBalanceValue).toFixed(6),
-          })
-        );
-      }
-
-      // If token is BTC, divide by 1e8
-      if (currentChain.tokenSymbol.endsWith("BTC")) {
-        tokenBalanceValue = Number(tokenBalance) / 1e8;
-
-        return dispatch(
-          setCurrentUser({
-            balance: Number(tokenBalanceValue).toFixed(6),
-          })
-        );
-      }
-
-      // Else use built in
-      tokenBalanceValue = window.web3.utils.fromWei(
-        tokenBalance.toString(),
-        "ether"
-      );
-
-      return dispatch(
-        setCurrentUser({
-          balance: Number(tokenBalanceValue).toFixed(6),
-        })
-      );
     } catch (err) {
-      console.log("get user balance error", err);
-    }
-  };
-
-  // Fetch user points from contract
-  const getUserPoints = async (contractAddress) => {
-    try {
-      if (!currentUser.address) return;
-
-      const contract = new ethers.Contract(
-        contractAddress,
-        mainContractAbi,
-        provider
-      );
-
-      return await contract?.pointsGained(currentUser.address).then((res) => {
-        const points = res.toString();
-
-        dispatch(
-          setCurrentUser({
-            points,
-          })
-        );
-      });
-    } catch (err) {
-      console.log("get user points error", err);
-    }
-  };
-
-  // Fetch raised amount from contract
-  const getRaisedAmount = async (contractAddress) => {
-    try {
-      const contract = new ethers.Contract(
-        contractAddress,
-        mainContractAbi,
-        provider
-      );
-
-      return await contract?.raiseLocal().then((res) => {
-        const raisedAmount = window.web3.utils.fromWei(res.toString(), "ether");
-
-        // TODO get totals for all chains
-
-        dispatch(
-          setCurrentChain({
-            raisedAmount,
-          })
-        );
-      });
-    } catch (err) {
-      console.log("get raised amount error", err);
-    }
-  };
-
-  // Switch chain on the users wallet
-  const setChainId = async () => {
-    try {
-      if (!active) return;
-
-      await window.ethereum
-        .request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: `0x${currentChain.chainNumber.toString(16)}` }],
-        })
-
-        .catch((error) => {
-          console.error("Error switching chain:", error);
-        });
-
-      if (currentChain.network !== "sepolia") {
-        await window.ethereum
-          .request({
-            method: "wallet_addEthereumChain",
-            params: [
-              {
-                chainId: `0x${currentChain.chainNumber.toString(16)}`,
-                rpcUrls: [currentChain.rpcUrl],
-                chainName: currentChain.name,
-                nativeCurrency: {
-                  name: currentChain.network,
-                  symbol:
-                    currentChain.network === "sepolia"
-                      ? "SepoliaEth"
-                      : currentChain.network === "bsc"
-                      ? "tBNB"
-                      : currentChain.network === "arbitrum"
-                      ? "AGOR"
-                      : "ETH",
-                  decimals: 18,
-                },
-              },
-            ],
-          })
-          .catch((error) => {
-            console.error("Error setting chain ID:", error);
-          });
-      }
-    } catch (err) {
-      console.log("set chain error", err);
+      console.log("set params error", err);
     }
   };
 
   // Fetch timestamp from contract and begin countdown
   useEffect(() => {
-    setChainId().then(() => {
-      getTimeStamp(currentChain.contract.toString());
-      getPrice(currentChain.contract.toString());
-      getNextPrice(currentChain.contract.toString());
-      getRaisedAmount(currentChain.contract.toString());
-
-      if (active) {
-        getUserPoints("0xA504FE0F0aF7eE985cEde1e72363d644aDF40314");
-        getUserBalance();
-      }
-    });
+    setParams();
 
     const startCountdown = setInterval(() => {
       if (ethTimeStamp === 0) return;
@@ -331,31 +111,27 @@ export const Homepage = () => {
       const minutes = Math.floor(timeToNextRound / 60) % 60;
       const seconds = timeToNextRound % 60;
 
+      let timerValue = {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+
       if (rounds > 30) {
-        const timerValue = {
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-        };
-
-        setTimerValue(timerValue);
         setPricingRounds(30);
-
+        setTimerValue(timerValue);
         return clearInterval(startCountdown);
       }
 
-      if (rounds > pricingRounds) {
-        setPricingRounds(rounds);
-      }
-
-      const timerValue = {
+      timerValue = {
         days,
         hours,
         minutes,
         seconds,
       };
 
+      setPricingRounds(rounds);
       setTimerValue(timerValue);
     }, 1000);
 
@@ -368,95 +144,6 @@ export const Homepage = () => {
       window.web3 = new Web3(window.ethereum);
     }
   }, []);
-
-  // useEffect(() => {
-  //   const effect = async () => {
-  //     const loadContract = async () => {
-  //       const raiserContracts = addressSet.filter(
-  //         (item) => item.raiser === true
-  //       );
-
-  //       raiserContracts.map(async (item, i) => {
-  //         const web3 = new Web3(item.rpcUrl);
-  //         const oneRaiserContract = new web3.eth.Contract(
-  //           item.abi,
-  //           item.testnet
-  //         );
-
-  //         await oneRaiserContract?.methods
-  //           .raiseLocal()
-  //           .call()
-  //           .then((res) => {
-  //             setRaiseValue(
-  //               (rs) =>
-  //                 rs +
-  //                 Number(window.web3.utils.fromWei(res.toString(), "ether"))
-  //             );
-  //           })
-  //           .catch((err) => {
-  //             console.log(err);
-  //           });
-  //       });
-  //     };
-  //     loadContract();
-  //   };
-  //   if (window.web3) {
-  //     effect();
-  //   }
-  // }, [setRaiseValue]);
-
-  // useEffect(() => {
-  //   const effect = async () => {
-  //     const loadContract = async () => {
-  //       if (window.web3) {
-  //         const currentContractAddress = addressSet.find(
-  //           (item) => item.chainId === currentChainId && item.erc20 === false
-  //         );
-
-  //         const currentABI = ABI.find(
-  //           (item) => item.chainId === currentChainId && item.erc20 === false
-  //         );
-
-  //         if (currentContractAddress && currentABI) {
-  //           return await new window.web3.eth.Contract(
-  //             currentABI.abi,
-  //             currentContractAddress.testnet
-  //           );
-  //         }
-  //       }
-  //     };
-
-  //     const loadTokenContract = async () => {
-  //       const currentWContractAddress = addressSet.find(
-  //         (item) => item.chainId === currentChainId && item.estimate === true
-  //       );
-
-  //       if (window.web3 && currentWContractAddress) {
-  //         return await new window.web3.eth.Contract(
-  //           TokenABI,
-  //           currentWContractAddress.testnet
-  //         );
-  //       }
-  //     };
-
-  //     let _contract = await loadContract();
-  //     let _tokenContract = await loadTokenContract();
-
-  //     console.log(_contract);
-
-  //     setContract(_contract);
-  //     setTokenContract(_tokenContract);
-  //   };
-  //   effect();
-  // }, [
-  //   account,
-  //   walletAddress,
-  //   currentChainId,
-  //   setContract,
-  //   setTokenContract,
-  //   cryptoType,
-  //   chainStatus,
-  // ]);
 
   return (
     <Box mt={2}>

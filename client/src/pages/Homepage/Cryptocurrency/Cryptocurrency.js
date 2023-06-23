@@ -56,6 +56,51 @@ export const Cryptocurrency = () => {
     setOpenModal(true);
   };
 
+  // Switch chain on the users wallet to complete the purchase
+  const setChainId = async () => {
+    try {
+      if (!currentUser.address) return;
+      if (!currentChain.network) return;
+
+      const setNetworkNativeToken = async () => {
+        if (currentChain.network === "sepolia") {
+          return "ETH";
+        } else if (currentChain.network === "bsc") {
+          return "tBNB";
+        } else if (currentChain.network === "arbitrum") {
+          return "AGOR";
+        } else {
+          return "ETH";
+        }
+      };
+
+      const nativeToken = await setNetworkNativeToken();
+
+      await window.ethereum
+        .request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: `0x${currentChain.chainNumber.toString(16)}`,
+              rpcUrls: [currentChain.rpcUrl],
+              chainName: currentChain.name,
+              nativeCurrency: {
+                name: currentChain.network,
+                symbol: nativeToken,
+                decimals: 18,
+              },
+            },
+          ],
+        })
+        .catch((error) => {
+          console.error("Error setting chain ID:", error);
+        });
+    } catch (err) {
+      console.log("set chain error", err);
+    }
+  };
+
+  // Send referral data to the server
   const sendDataToServer = async (res) => {
     try {
       axios
@@ -80,6 +125,8 @@ export const Cryptocurrency = () => {
 
   const handleBuyNowClick = async () => {
     try {
+      await setChainId();
+
       let value = window.web3.utils.toWei(buyValue.toString(), "ether");
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
@@ -107,11 +154,13 @@ export const Cryptocurrency = () => {
           value = ethers.utils.parseUnits(buyValue.toString(), 8);
         }
 
+        // Check if the user has approved the contract to spend their tokens
         const tokenAllowance = await tokenContract.allowance(
           currentUser.address,
           currentChain.contract
         );
 
+        // If the user has not approved the contract to spend their tokens, request approval
         if (Number(tokenAllowance.toString()) <= value) {
           await tokenContract.approve(currentChain.contract, value);
         }
@@ -124,27 +173,6 @@ export const Cryptocurrency = () => {
           });
 
         sendDataToServer(contributionResult);
-
-        // await tokenContract
-        //   .allowance(currentUser.address, currentChain.contract)
-        //   .then(async (res) => {
-        //     if (Number(res.toString()) <= buyValue) {
-        //       await tokenContract.approve(currentChain.contract, value);
-        //     }
-
-        //     await contract.methods
-        //       .contribute(currentChain.tokenContract, value, referralCode)
-        //       .send({
-        //         from: currentUser.address,
-        //         gasLimit: 500000,
-        //       })
-        //       .then((res) => {
-        //         sendDataToServer(res);
-        //       })
-        //       .catch((err) => {
-        //         console.log(err);
-        //       });
-        //   });
       } else {
         const contributionResult = await contract.methods
           .contribute(currentChain.tokenContract, 0, referralCode)
@@ -154,19 +182,6 @@ export const Cryptocurrency = () => {
           });
 
         sendDataToServer(contributionResult);
-
-        // await contract.methods
-        //   .contribute(currentChain.tokenContract, 0, referralCode)
-        //   .send({
-        //     from: currentUser.address,
-        //     value,
-        //   })
-        //   .then((res) => {
-        //     sendDataToServer(res);
-        //   })
-        //   .catch((err) => {
-        //     console.log(err);
-        //   });
       }
     } catch (err) {
       console.log(err);
