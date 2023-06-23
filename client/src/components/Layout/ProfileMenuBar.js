@@ -1,10 +1,10 @@
+import { useWeb3React } from "@web3-react/core";
 import { Box, Menu, MenuItem, ListItemIcon, Link } from "@mui/material";
 import Logout from "@mui/icons-material/Logout";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useDispatch, useSelector } from "react-redux";
 import { setCurrentUser, resetUserState } from "../../store/User";
-import { useWeb3React } from "@web3-react/core";
 import copy from "copy-to-clipboard";
 
 import loginedIcon from "../../assets/images/home/off.png";

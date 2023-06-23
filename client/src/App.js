@@ -1,7 +1,7 @@
 import { ThemeProvider, Box } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Web3ReactProvider } from "@web3-react/core";
+import { Web3ReactProvider, useWeb3React, web } from "@web3-react/core";
 import { ethers } from "ethers";
 
 import theme from "./themes";
@@ -14,15 +14,16 @@ import { FAQ } from "./pages/FAQ";
 import "./App.css";
 
 import * as buffer from "buffer";
+import { useEffect } from "react";
 window.Buffer = buffer.Buffer;
 
-function getLibrary(provider) {
-  const library = new ethers.providers.Web3Provider(provider);
-  library.pollingInterval = 8000; // frequency provider is polling
-  return library;
-}
-
 function App() {
+  function getLibrary(provider) {
+    const library = new ethers.providers.Web3Provider(provider);
+    library.pollingInterval = 8000; // frequency provider is polling
+    return library;
+  }
+
   return (
     <Box
       sx={{

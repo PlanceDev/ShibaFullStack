@@ -1,8 +1,8 @@
+import { useWeb3React } from "@web3-react/core";
 import { useContext, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setCurrentUser } from "../../store/User";
 import { useNavigate } from "react-router-dom";
-import { useWeb3React } from "@web3-react/core";
 import axios from "axios";
 
 import { setCurrentChain } from "../../store/Chain";

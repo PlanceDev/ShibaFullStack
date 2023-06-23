@@ -1,9 +1,9 @@
+import { useWeb3React } from "@web3-react/core";
 import { useEffect } from "react";
 import { Box, Typography, Modal, Grid, Button } from "@mui/material";
 import TrendingFlatOutlinedIcon from "@mui/icons-material/TrendingFlatOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import axios from "axios";
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 
 import { palette } from "../../themes";
@@ -44,15 +44,16 @@ export const WalletConnectModal = ({
 
       if (provider === injected) {
         if (window.ethereum === undefined) {
-          alert("Please install metamask ");
+          window.location.reload();
+          // console.log("Please install metamask");
+          // alert("Please install metamask");
         }
 
-        const provider1 = new ethers.providers.Web3Provider(
-          window.ethereum,
-          "any"
-        );
+        await window.ethereum.request({ method: "eth_requestAccounts" });
 
-        await provider1.send("eth_requestAccounts", []);
+        // const provider1 = ethers.providers.Web3Provider(window.ethereum, "any");
+        // await provider1.send("eth_requestAccounts", []);
+
         activate(injected);
         setOpenModal(false);
       }
@@ -88,6 +89,12 @@ export const WalletConnectModal = ({
         .catch((err) => {
           console.log(err);
         });
+    }
+  }, [account]);
+
+  useEffect(() => {
+    if (account !== undefined) {
+      localStorage.setItem("wallet account", account);
     }
   }, [account]);
 
@@ -244,9 +251,7 @@ export const WalletConnectModal = ({
                     justifyContent={"space-between"}
                     py={4}
                     px={{ sm: 6, xs: 4 }}
-                    onClick={async () => {
-                      await connetHandler(item.provider);
-                    }}
+                    onClick={() => connetHandler(item.provider)}
                     sx={{
                       border: "2px solid #202025",
                       borderRadius: "12px",

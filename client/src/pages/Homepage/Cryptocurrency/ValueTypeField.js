@@ -76,7 +76,7 @@ export const ValueTypeField = ({
       }
 
       if (currentChain.tokenSymbol.startsWith("b_")) {
-        value = window.web3.utils.fromWei(buyValue.toString(), "ether");
+        value = ethers.utils.parseUnits(Number(e.target.value).toString(), 18);
       }
 
       updatePoints(value);
@@ -117,7 +117,7 @@ export const ValueTypeField = ({
       }
 
       if (currentChain.tokenSymbol.startsWith("b_")) {
-        value = window.web3.utils.fromWei(buyValue.toString(), "ether");
+        value = ethers.utils.parseUnits(buyValue.toString(), 18);
       }
 
       updatePoints(value);

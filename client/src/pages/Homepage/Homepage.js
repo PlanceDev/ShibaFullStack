@@ -1,6 +1,6 @@
+import { useWeb3React } from "@web3-react/core";
 import { useEffect, useContext, useState } from "react";
 import { Box } from "@mui/material";
-import { NetworkContextName, useWeb3React } from "@web3-react/core";
 import Web3 from "web3";
 import { useLocation } from "react-router-dom";
 import axios from "axios";

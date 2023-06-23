@@ -1,8 +1,8 @@
+import { useWeb3React } from "@web3-react/core";
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { palette } from "../../../themes";
 import { Context } from "../../../context/AppContext";
-import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { useSelector, useDispatch } from "react-redux";
 

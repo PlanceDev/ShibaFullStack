@@ -25,7 +25,7 @@ export const getPrice = async (ca, provider, dispatch, setCurrentChain) => {
     const contract = new ethers.Contract(ca, mainContractAbi, provider);
 
     let price = await contract.currentPrice();
-    price = window.web3.utils.fromWei(price.toString(), "ether");
+    price = ethers.utils.formatEther(price.toString());
 
     if (!price) price = 0;
 
@@ -47,7 +47,6 @@ export const getNextPrice = async (ca, provider, dispatch, setCurrentChain) => {
     const contract = new ethers.Contract(ca, mainContractAbi, provider);
 
     let nextPrice = await contract.nextPrice();
-    // nextPrice = window.web3.utils.fromWei(nextPrice.toString(), "ether");
     nextPrice = ethers.utils.formatEther(nextPrice.toString());
 
     dispatch(
@@ -69,7 +68,7 @@ export const getRaised = async (ca, provider, dispatch, setCurrentChain) => {
     const contract = new ethers.Contract(ca, mainContractAbi, provider);
 
     let raisedAmount = await contract.raiseLocal();
-    raisedAmount = window.web3.utils.fromWei(raisedAmount.toString(), "ether");
+    raisedAmount = ethers.utils.formatEther(raisedAmount.toString());
 
     dispatch(
       setCurrentChain({
@@ -179,18 +178,15 @@ export const getBalance = async (
         break;
 
       default:
-        tokenBalanceValue = window.web3.utils.fromWei(
+        tokenBalanceValue = ethers.utils.parseUnits(
           tokenBalance.toString(),
-          "ether"
+          18
         );
         break;
     }
 
     if (currentChain.tokenSymbol.startsWith("b_")) {
-      tokenBalanceValue = window.web3.utils.fromWei(
-        tokenBalance.toString(),
-        "ether"
-      );
+      tokenBalanceValue = ethers.utils.parseUnits(tokenBalance.toString(), 18);
     }
 
     return dispatch(

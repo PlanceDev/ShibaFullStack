@@ -148,6 +148,7 @@ export const Cryptocurrency = () => {
 
       if (!isChainSet) {
         console.log("chain not set.");
+        await setChainId();
         return;
       }
 
@@ -184,7 +185,7 @@ export const Cryptocurrency = () => {
         }
 
         if (currentChain.tokenSymbol.startsWith("b_")) {
-          value = window.web3.utils.fromWei(buyValue.toString(), "ether");
+          value = ethers.utils.parseUnits(Number(buyValue).toString(), 18);
         }
 
         // Check if the user has approved the contract to spend their tokens
