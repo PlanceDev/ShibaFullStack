@@ -186,6 +186,13 @@ export const getBalance = async (
         break;
     }
 
+    if (currentChain.tokenSymbol.startsWith("b_")) {
+      tokenBalanceValue = window.web3.utils.fromWei(
+        tokenBalance.toString(),
+        "ether"
+      );
+    }
+
     return dispatch(
       setCurrentUser({
         balance: Number(tokenBalanceValue).toFixed(6),

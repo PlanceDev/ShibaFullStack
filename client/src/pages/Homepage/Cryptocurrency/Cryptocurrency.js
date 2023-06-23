@@ -183,6 +183,10 @@ export const Cryptocurrency = () => {
           value = ethers.utils.parseUnits(buyValue.toString(), 8);
         }
 
+        if (currentChain.tokenSymbol.startsWith("b_")) {
+          value = window.web3.utils.fromWei(buyValue.toString(), "ether");
+        }
+
         // Check if the user has approved the contract to spend their tokens
         const tokenAllowance = await tokenContract.allowance(
           currentUser.address,
