@@ -82,7 +82,6 @@ export const Homepage = () => {
       );
 
       return await contract?.launchAt().then((res) => {
-        console.log("timestamp", res);
         setEthTimeStamp(res);
       });
     } catch (err) {
@@ -163,7 +162,36 @@ export const Homepage = () => {
 
       const tokenBalance = await tokenContract.balanceOf(accounts[0]);
 
-      const tokenBalanceValue = window.web3.utils.fromWei(
+      // If token is ETH, divide by 1e18
+      let tokenBalanceValue;
+
+      // If token is USDC or USDT, divide by 1e6
+      if (
+        currentChain.tokenSymbol.endsWith("USDC") ||
+        currentChain.tokenSymbol.endsWith("USDT")
+      ) {
+        tokenBalanceValue = Number(tokenBalance) / 1e6;
+
+        return dispatch(
+          setCurrentUser({
+            balance: Number(tokenBalanceValue).toFixed(6),
+          })
+        );
+      }
+
+      // If token is BTC, divide by 1e8
+      if (currentChain.tokenSymbol.endsWith("BTC")) {
+        tokenBalanceValue = Number(tokenBalance) / 1e8;
+
+        return dispatch(
+          setCurrentUser({
+            balance: Number(tokenBalanceValue).toFixed(6),
+          })
+        );
+      }
+
+      // Else use built in
+      tokenBalanceValue = window.web3.utils.fromWei(
         tokenBalance.toString(),
         "ether"
       );
@@ -332,7 +360,7 @@ export const Homepage = () => {
     }, 1000);
 
     return () => clearInterval(startCountdown);
-  }, [currentChain, account, active, currentUser]);
+  }, [currentChain, account, active, ethTimeStamp, currentUser]);
 
   // Set web3 on load
   useEffect(() => {

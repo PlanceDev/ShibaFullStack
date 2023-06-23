@@ -58,7 +58,7 @@ export const TokenBalanceField = () => {
             {i === 0
               ? !currentUser.address
                 ? "-"
-                : Number(currentUser.balance).toFixed(7)
+                : Number(currentUser.balance)
               : i === 1
               ? `$ ${Number(currentChain.currentPrice / 10000).toFixed(7)}`
               : i === 2

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Box, Grid } from "@mui/material";
 import axios from "axios";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import Web3 from "web3";
 import {
   CryptoTypeField,
@@ -81,10 +81,8 @@ export const Cryptocurrency = () => {
   const handleBuyNowClick = async () => {
     try {
       let value = window.web3.utils.toWei(buyValue.toString(), "ether");
-
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
-
       const contract = await new window.web3.eth.Contract(
         mainContractAbi,
         currentChain.contract
@@ -98,56 +96,77 @@ export const Cryptocurrency = () => {
           provider.getSigner()
         );
 
-        await tokenContract
-          .allowance(currentUser.address, currentChain.contract)
-          .then(async (res) => {
-            if (Number(res.toString()) <= 0) {
-              await tokenContract.approve(currentChain.contract, res);
-            }
+        if (
+          currentChain.tokenSymbol.endsWith("USDC") ||
+          currentChain.tokenSymbol.endsWith("USDT")
+        ) {
+          value = ethers.utils.parseUnits(buyValue.toString(), 6);
+        }
 
-            if (
-              currentChain.tokenSymbol.endsWith("USDC") ||
-              currentChain.tokenSymbol.endsWith("USDT")
-            ) {
-              value = window.web3.utils.toWei(
-                (buyValue * 1000000).toString(),
-                "wei"
-              );
-            }
+        if (currentChain.tokenSymbol.endsWith("BTC")) {
+          value = ethers.utils.parseUnits(buyValue.toString(), 8);
+        }
 
-            if (currentChain.tokenSymbol.endsWith("BTC")) {
-              value = window.web3.utils.toWei(
-                (buyValue * 100000000).toString(),
-                "wei"
-              );
-            }
+        const tokenAllowance = await tokenContract.allowance(
+          currentUser.address,
+          currentChain.contract
+        );
 
-            await contract.methods
-              .contribute(currentChain.tokenContract, value, referralCode)
-              .send({
-                from: currentUser.address,
-                value: window.web3.utils.toWei("0.00001", "ether"),
-              })
-              .then((res) => {
-                sendDataToServer(res);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+        if (Number(tokenAllowance.toString()) <= value) {
+          await tokenContract.approve(currentChain.contract, value);
+        }
+
+        const contributionResult = await contract.methods
+          .contribute(currentChain.tokenContract, value, referralCode)
+          .send({
+            from: currentUser.address,
+            gasLimit: 500000,
           });
+
+        sendDataToServer(contributionResult);
+
+        // await tokenContract
+        //   .allowance(currentUser.address, currentChain.contract)
+        //   .then(async (res) => {
+        //     if (Number(res.toString()) <= buyValue) {
+        //       await tokenContract.approve(currentChain.contract, value);
+        //     }
+
+        //     await contract.methods
+        //       .contribute(currentChain.tokenContract, value, referralCode)
+        //       .send({
+        //         from: currentUser.address,
+        //         gasLimit: 500000,
+        //       })
+        //       .then((res) => {
+        //         sendDataToServer(res);
+        //       })
+        //       .catch((err) => {
+        //         console.log(err);
+        //       });
+        //   });
       } else {
-        await contract.methods
+        const contributionResult = await contract.methods
           .contribute(currentChain.tokenContract, 0, referralCode)
           .send({
             from: currentUser.address,
             value,
-          })
-          .then((res) => {
-            sendDataToServer(res);
-          })
-          .catch((err) => {
-            console.log(err);
           });
+
+        sendDataToServer(contributionResult);
+
+        // await contract.methods
+        //   .contribute(currentChain.tokenContract, 0, referralCode)
+        //   .send({
+        //     from: currentUser.address,
+        //     value,
+        //   })
+        //   .then((res) => {
+        //     sendDataToServer(res);
+        //   })
+        //   .catch((err) => {
+        //     console.log(err);
+        //   });
       }
     } catch (err) {
       console.log(err);

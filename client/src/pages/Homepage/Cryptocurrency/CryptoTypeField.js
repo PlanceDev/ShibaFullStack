@@ -73,14 +73,31 @@ export const CryptoTypeField = () => {
   // Handle Token Change
   const tokenPicker = async (chain) => {
     const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
-    // 0x4E1Afb1E58a122bf7875685c5071f4Ba318ac59C
-    // console.log(selectedChain);
+
+    // Handles _raiser naming error from previous dev's spaghetti code - TODO: Remove this when we have time
+    const handleNamingErrorIssue = () => {
+      if (selectedChain[0][chain] === currentChain.contract) {
+        if (chain === "s_Raiser") {
+          return "0x99e78fbcfa087f72ddc927aa35da148518416959";
+        }
+
+        if (chain === "a_Raiser") {
+          return "0xb942face0d4fe5724d0192f6999c5192a53450ee";
+        }
+
+        if (chain === "b_Raiser") {
+          return "0x8a9043da48f2ec50a35cef0ec26932e61db1b2a3";
+        }
+      }
+
+      return selectedChain[0][chain];
+    };
 
     dispatch(
       setCurrentChain({
         tokenSymbol: chain,
         tokenAbi: selectedChain[0]["abi"],
-        tokenContract: selectedChain[0][chain],
+        tokenContract: handleNamingErrorIssue(),
       })
     );
   };
