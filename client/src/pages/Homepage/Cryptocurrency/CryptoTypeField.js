@@ -93,6 +93,8 @@ export const CryptoTypeField = () => {
       return selectedChain[0][chain];
     };
 
+    console.log("selectedChain", selectedChain[0]);
+
     dispatch(
       setCurrentChain({
         tokenSymbol: chain,

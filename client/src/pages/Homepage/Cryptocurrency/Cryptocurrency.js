@@ -3,6 +3,7 @@ import { Box, Grid } from "@mui/material";
 import axios from "axios";
 import { ethers, BigNumber } from "ethers";
 import Web3 from "web3";
+import { getPoints, getBalance } from "../utils";
 import {
   CryptoTypeField,
   TokenBalanceField,
@@ -16,6 +17,7 @@ import { CustomButton } from "../../../components/CustomButton";
 import { Context } from "../../../context/AppContext";
 import { useSelector, useDispatch } from "react-redux";
 import { mainContractAbi } from "../../../constant/mainContractAbi";
+import { setCurrentUser } from "../../../store/User";
 
 import headerImg from "../../../assets/images/home/header-img.png";
 import a_eth from "../../../assets/images/home/a_eth.png";
@@ -59,8 +61,9 @@ export const Cryptocurrency = () => {
   // Switch chain on the users wallet to complete the purchase
   const setChainId = async () => {
     try {
-      if (!currentUser.address) return;
-      if (!currentChain.network) return;
+      if (!currentChain.chainNumber || !currentChain.network) {
+        return;
+      }
 
       const setNetworkNativeToken = async () => {
         if (currentChain.network === "sepolia") {
@@ -76,7 +79,7 @@ export const Cryptocurrency = () => {
 
       const nativeToken = await setNetworkNativeToken();
 
-      await window.ethereum
+      return await window.ethereum
         .request({
           method: "wallet_addEthereumChain",
           params: [
@@ -92,8 +95,12 @@ export const Cryptocurrency = () => {
             },
           ],
         })
+        .then(() => {
+          return true;
+        })
         .catch((error) => {
           console.error("Error setting chain ID:", error);
+          return false;
         });
     } catch (err) {
       console.log("set chain error", err);
@@ -114,6 +121,18 @@ export const Cryptocurrency = () => {
         )
         .then((res) => {
           console.log(res);
+          // Update the user's balance and points
+
+          let provider = new ethers.providers.Web3Provider(window.ethereum);
+          // getBalance(currentChain, provider, dispatch, setCurrentUser);
+
+          getPoints(
+            currentChain.contract,
+            provider,
+            dispatch,
+            currentUser,
+            setCurrentUser
+          );
         })
         .catch((err) => {
           console.log(err);
@@ -125,7 +144,17 @@ export const Cryptocurrency = () => {
 
   const handleBuyNowClick = async () => {
     try {
-      await setChainId();
+      const isChainSet = await setChainId();
+
+      if (!isChainSet) {
+        console.log("chain not set.");
+        return;
+      }
+
+      if (!buyValue || buyValue <= 0) {
+        console.log("Amount value must be greater than 0.");
+        return;
+      }
 
       let value = window.web3.utils.toWei(buyValue.toString(), "ether");
       let provider = new ethers.providers.Web3Provider(window.ethereum);

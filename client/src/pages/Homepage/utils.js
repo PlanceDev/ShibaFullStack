@@ -1,3 +1,4 @@
+import e from "cors";
 import { mainContractAbi } from "../../constant/mainContractAbi";
 import { ethers } from "ethers";
 import Web3 from "web3";
@@ -46,7 +47,8 @@ export const getNextPrice = async (ca, provider, dispatch, setCurrentChain) => {
     const contract = new ethers.Contract(ca, mainContractAbi, provider);
 
     let nextPrice = await contract.nextPrice();
-    nextPrice = window.web3.utils.fromWei(nextPrice.toString(), "ether");
+    // nextPrice = window.web3.utils.fromWei(nextPrice.toString(), "ether");
+    nextPrice = ethers.utils.formatEther(nextPrice.toString());
 
     dispatch(
       setCurrentChain({
@@ -114,15 +116,15 @@ export const getBalance = async (
   currentChain,
   provider,
   dispatch,
-  currentUser,
   setCurrentUser
 ) => {
   try {
     let balance;
+    let ethRPC = process.env.REACT_APP_ETH_RPC;
     let bnbRPC = process.env.REACT_APP_BSC_RPC;
     let arbRPC = process.env.REACT_APP_ARB_RPC;
 
-    const ethProvider = new ethers.providers.Web3Provider(window.ethereum);
+    const ethProvider = new ethers.providers.JsonRpcProvider(ethRPC);
     const bnbProvider = new ethers.providers.JsonRpcProvider(bnbRPC);
     const arbProvider = new ethers.providers.JsonRpcProvider(arbRPC);
 
@@ -144,7 +146,8 @@ export const getBalance = async (
         balance = await bnbProvider.getBalance(walletAddress);
       }
 
-      let balanceValue = window.web3.utils.fromWei(balance.toString(), "ether");
+      // let balanceValue = window.web3.utils.fromWei(balance.toString(), "ether");
+      let balanceValue = ethers.utils.formatEther(balance.toString());
 
       return dispatch(
         setCurrentUser({
