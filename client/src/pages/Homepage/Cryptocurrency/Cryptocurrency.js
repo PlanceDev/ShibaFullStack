@@ -157,7 +157,11 @@ export const Cryptocurrency = () => {
         return;
       }
 
-      let value = window.web3.utils.toWei(buyValue.toString(), "ether");
+      let value = ethers.utils.parseUnits(
+        Number(buyValue).toString(),
+        currentChain.decimals
+      );
+
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
       const contract = await new window.web3.eth.Contract(
@@ -172,21 +176,6 @@ export const Cryptocurrency = () => {
           currentChain.tokenAbi,
           provider.getSigner()
         );
-
-        if (
-          currentChain.tokenSymbol.endsWith("USDC") ||
-          currentChain.tokenSymbol.endsWith("USDT")
-        ) {
-          value = ethers.utils.parseUnits(buyValue.toString(), 6);
-        }
-
-        if (currentChain.tokenSymbol.endsWith("BTC")) {
-          value = ethers.utils.parseUnits(buyValue.toString(), 8);
-        }
-
-        if (currentChain.tokenSymbol.startsWith("b_")) {
-          value = ethers.utils.parseUnits(Number(buyValue).toString(), 18);
-        }
 
         // Check if the user has approved the contract to spend their tokens
         const tokenAllowance = await tokenContract.allowance(

@@ -74,6 +74,8 @@ export const CryptoTypeField = () => {
   const tokenPicker = async (chain) => {
     const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
 
+    console.log(selectedChain[0][chain]);
+
     // Handles _raiser naming error from previous dev's spaghetti code - TODO: Remove this when we have time
     const handleNamingErrorIssue = () => {
       if (selectedChain[0][chain] === currentChain.contract) {
@@ -93,12 +95,34 @@ export const CryptoTypeField = () => {
       return selectedChain[0][chain];
     };
 
-    console.log("selectedChain", selectedChain[0]);
+    const handleABIErrorIssue = () => {
+      if (selectedChain[0][chain] === currentChain.contract) {
+        if (chain === "s_Raiser") {
+          return chainData.filter((obj) => obj.hasOwnProperty("s_WETH"))[0][
+            "abi"
+          ];
+        }
+
+        if (chain === "a_Raiser") {
+          return chainData.filter((obj) => obj.hasOwnProperty("a_WETH"))[0][
+            "abi"
+          ];
+        }
+
+        if (chain === "b_Raiser") {
+          return chainData.filter((obj) => obj.hasOwnProperty("b_WBNB"))[0][
+            "abi"
+          ];
+        }
+      }
+
+      return selectedChain[0]["abi"];
+    };
 
     dispatch(
       setCurrentChain({
         tokenSymbol: chain,
-        tokenAbi: selectedChain[0]["abi"],
+        tokenAbi: handleABIErrorIssue(),
         tokenContract: handleNamingErrorIssue(),
       })
     );
@@ -120,7 +144,9 @@ export const CryptoTypeField = () => {
             contract: process.env.REACT_APP_ETH_CONTRACT,
             tokenContract: process.env.REACT_APP_WETH_CONTRACT,
             tokenSymbol: "s_Raiser",
-            tokenAbi: [],
+            tokenAbi: chainData.filter((obj) =>
+              obj.hasOwnProperty("s_WETH")
+            )[0]["abi"],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: process.env.REACT_APP_ETH_RPC,
@@ -138,7 +164,9 @@ export const CryptoTypeField = () => {
             contract: process.env.REACT_APP_BSC_CONTRACT,
             tokenContract: process.env.REACT_APP_WBSC_CONTRACT,
             tokenSymbol: "b_Raiser",
-            tokenAbi: [],
+            tokenAbi: chainData.filter((obj) =>
+              obj.hasOwnProperty("b_WBNB")
+            )[0]["abi"],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: process.env.REACT_APP_BSC_RPC,
@@ -156,7 +184,9 @@ export const CryptoTypeField = () => {
             contract: process.env.REACT_APP_ARB_CONTRACT,
             tokenContract: process.env.REACT_APP_WARB_CONTRACT,
             tokenSymbol: "a_Raiser",
-            tokenAbi: [],
+            tokenAbi: chainData.filter((obj) =>
+              obj.hasOwnProperty("a_WETH")
+            )[0]["abi"],
             currentPrice: 0,
             nextPrice: 0,
             rpcUrl: process.env.REACT_APP_ARB_RPC,

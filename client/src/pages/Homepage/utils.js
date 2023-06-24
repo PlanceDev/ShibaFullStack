@@ -110,6 +110,34 @@ export const getPoints = async (
   }
 };
 
+// Fetch token decimals from contract
+export const getDecimals = async (
+  currentChain,
+  provider,
+  dispatch,
+  setCurrentChain
+) => {
+  try {
+    const tokenContract = new ethers.Contract(
+      currentChain.tokenContract,
+      currentChain.tokenAbi,
+      provider
+    );
+
+    const decimals = await tokenContract.decimals();
+
+    dispatch(
+      setCurrentChain({
+        decimals: Number(decimals.toString()),
+      })
+    );
+
+    return decimals;
+  } catch (err) {
+    console.log("get decimals error", err);
+  }
+};
+
 // Fetch user balance from wallet
 export const getBalance = async (
   currentChain,
@@ -156,42 +184,24 @@ export const getBalance = async (
     }
 
     // Get ERC-20 Token balance
-    const tokenAddress = currentChain.tokenContract;
     const tokenContract = new ethers.Contract(
-      tokenAddress,
+      currentChain.tokenContract,
       currentChain.tokenAbi,
       provider
     );
 
     const tokenBalance = await tokenContract.balanceOf(accounts[0]);
-    let tokenBalanceValue;
 
-    // Set decimals for USDC, USDT, BTC
-    switch (true) {
-      case currentChain.tokenSymbol.endsWith("USDC"):
-      case currentChain.tokenSymbol.endsWith("USDT"):
-        tokenBalanceValue = Number(tokenBalance) / 1e6;
-        break;
+    const decimals = await tokenContract.decimals();
 
-      case currentChain.tokenSymbol.endsWith("BTC"):
-        tokenBalanceValue = Number(tokenBalance) / 1e8;
-        break;
-
-      default:
-        tokenBalanceValue = ethers.utils.parseUnits(
-          tokenBalance.toString(),
-          18
-        );
-        break;
-    }
-
-    if (currentChain.tokenSymbol.startsWith("b_")) {
-      tokenBalanceValue = ethers.utils.parseUnits(tokenBalance.toString(), 18);
-    }
+    const tokenBalanceValue = ethers.utils.parseUnits(
+      tokenBalance.toString(),
+      Number(decimals.toString())
+    );
 
     return dispatch(
       setCurrentUser({
-        balance: Number(tokenBalanceValue).toFixed(6),
+        balance: Number(tokenBalanceValue),
       })
     );
   } catch (err) {

@@ -25,6 +25,7 @@ import {
   getRaised,
   getPoints,
   getBalance,
+  getDecimals,
 } from "./utils";
 
 let provider;
@@ -71,9 +72,16 @@ export const Homepage = () => {
       getPrice(currentChain.contract, provider, dispatch, setCurrentChain);
       getNextPrice(currentChain.contract, provider, dispatch, setCurrentChain);
       getRaised(currentChain.contract, provider, dispatch, setCurrentChain);
+      getDecimals(currentChain, provider, dispatch, setCurrentChain);
 
       if (active) {
-        getBalance(currentChain, provider, dispatch, setCurrentUser);
+        getBalance(
+          currentChain,
+          provider,
+          dispatch,
+          setCurrentUser,
+          setCurrentChain
+        );
 
         getPoints(
           currentChain.contract,

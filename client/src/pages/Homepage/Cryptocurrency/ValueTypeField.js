@@ -62,22 +62,10 @@ export const ValueTypeField = ({
     }
 
     if (e.target.value !== "") {
-      let value;
-
-      if (
-        currentChain.tokenSymbol.endsWith("USDC") ||
-        currentChain.tokenSymbol.endsWith("USDT")
-      ) {
-        value = ethers.utils.parseUnits(e.target.value.toString(), 6);
-      } else if (currentChain.tokenSymbol.endsWith("BTC")) {
-        value = ethers.utils.parseUnits(e.target.value.toString(), 8);
-      } else {
-        value = window.web3.utils.toWei(e.target.value.toString(), "ether");
-      }
-
-      if (currentChain.tokenSymbol.startsWith("b_")) {
-        value = ethers.utils.parseUnits(Number(e.target.value).toString(), 18);
-      }
+      let value = ethers.utils.parseUnits(
+        Number(e.target.value).toString(),
+        currentChain.decimals
+      );
 
       updatePoints(value);
     }
@@ -103,22 +91,10 @@ export const ValueTypeField = ({
 
     // Only update points if the user has entered a value in token field
     if (buyValue > 0) {
-      let value;
-
-      if (
-        currentChain.tokenSymbol.endsWith("USDC") ||
-        currentChain.tokenSymbol.endsWith("USDT")
-      ) {
-        value = ethers.utils.parseUnits(buyValue.toString(), 6);
-      } else if (currentChain.tokenSymbol.endsWith("BTC")) {
-        value = ethers.utils.parseUnits(buyValue.toString(), 8);
-      } else {
-        value = window.web3.utils.toWei(buyValue.toString(), "ether");
-      }
-
-      if (currentChain.tokenSymbol.startsWith("b_")) {
-        value = ethers.utils.parseUnits(buyValue.toString(), 18);
-      }
+      let value = ethers.utils.parseUnits(
+        Number(buyValue).toString(),
+        currentChain.decimals
+      );
 
       updatePoints(value);
     }

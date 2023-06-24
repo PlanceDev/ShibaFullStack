@@ -15,6 +15,7 @@ const initialState = {
   nextPrice: 0,
   rpcUrl: process.env.REACT_APP_ETH_RPC,
   raisedAmount: 0,
+  decimals: 18,
 };
 
 const chainSlice = createSlice({
@@ -35,6 +36,7 @@ const chainSlice = createSlice({
       state.nextPrice = action.payload.nextPrice || state.nextPrice;
       state.rpcUrl = action.payload.rpcUrl || state.rpcUrl;
       state.raisedAmount = action.payload.raisedAmount || state.raisedAmount;
+      state.decimals = action.payload.decimals || state.decimals;
     },
   },
 });
