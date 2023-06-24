@@ -103,38 +103,62 @@ export const Homepage = () => {
     const startCountdown = setInterval(() => {
       if (ethTimeStamp === 0) return;
 
-      const currentTimestamp = new Date().getTime();
-      const duration = currentTimestamp / 1000 - ethTimeStamp;
+      let currentTimestamp = new Date().getTime();
+      let duration = currentTimestamp / 1000 - ethTimeStamp;
       const rounds = Math.floor(duration / 720) + 1;
-      const timeToNextRound = Math.floor(720 - (duration % 720));
 
-      const days = Math.floor(timeToNextRound / 60 / 60 / 24);
-      const hours = Math.floor(timeToNextRound / 60 / 60) % 24;
-      const minutes = Math.floor(timeToNextRound / 60) % 60;
-      const seconds = timeToNextRound % 60;
+      //  If sale has started
+      if (rounds >= 1) {
+        const timeToNextRound = Math.floor(720 - (duration % 720));
 
-      let timerValue = {
-        days: 0,
-        hours: 0,
-        minutes: 0,
-        seconds: 0,
-      };
+        const days = Math.floor(timeToNextRound / 60 / 60 / 24);
+        const hours = Math.floor(timeToNextRound / 60 / 60) % 24;
+        const minutes = Math.floor(timeToNextRound / 60) % 60;
+        const seconds = timeToNextRound % 60;
 
-      if (rounds > 30) {
-        setPricingRounds(30);
+        let timerValue = {
+          days: 0,
+          hours: 0,
+          minutes: 0,
+          seconds: 0,
+        };
+
+        if (rounds > 30) {
+          setPricingRounds(30);
+          setTimerValue(timerValue);
+          return clearInterval(startCountdown);
+        }
+
+        timerValue = {
+          days,
+          hours,
+          minutes,
+          seconds,
+        };
+
+        setPricingRounds(rounds);
         setTimerValue(timerValue);
-        return clearInterval(startCountdown);
       }
 
-      timerValue = {
-        days,
-        hours,
-        minutes,
-        seconds,
-      };
+      // If sale is in future
+      if (rounds < 0) {
+        let duration = ethTimeStamp - currentTimestamp / 1000;
 
-      setPricingRounds(rounds);
-      setTimerValue(timerValue);
+        const days = Math.floor(duration / 60 / 60 / 24);
+        const hours = Math.floor(duration / 60 / 60) % 24;
+        const minutes = Math.floor(duration / 60) % 60;
+        const seconds = duration % 60;
+
+        let timerValue = {
+          days,
+          hours,
+          minutes,
+          seconds,
+        };
+
+        setPricingRounds(0);
+        setTimerValue(timerValue);
+      }
     }, 1000);
 
     return () => clearInterval(startCountdown);
