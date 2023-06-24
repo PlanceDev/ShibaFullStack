@@ -13,6 +13,9 @@ import { FAQ } from "./pages/FAQ";
 
 import "./App.css";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import * as buffer from "buffer";
 import { useEffect } from "react";
 window.Buffer = buffer.Buffer;
@@ -44,6 +47,8 @@ function App() {
           </AppProvider>
         </ThemeProvider>
       </Web3ReactProvider>
+
+      <ToastContainer position="bottom-left" />
     </Box>
   );
 }

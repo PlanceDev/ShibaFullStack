@@ -194,14 +194,12 @@ export const getBalance = async (
 
     const decimals = await tokenContract.decimals();
 
-    const tokenBalanceValue = ethers.utils.parseUnits(
-      tokenBalance.toString(),
-      Number(decimals.toString())
-    );
+    // remove traling zeros from balance
+    const tokenBalanceValue = tokenBalance / 10 ** decimals;
 
     return dispatch(
       setCurrentUser({
-        balance: Number(tokenBalanceValue),
+        balance: Number(tokenBalanceValue).toString(),
       })
     );
   } catch (err) {

@@ -21,6 +21,7 @@ import { setCurrentUser } from "../../../store/User";
 
 import headerImg from "../../../assets/images/home/header-img.png";
 import a_eth from "../../../assets/images/home/a_eth.png";
+import { toast } from "react-toastify";
 
 const styles = { width: "100%" };
 
@@ -61,45 +62,26 @@ export const Cryptocurrency = () => {
   // Switch chain on the users wallet to complete the purchase
   const setChainId = async () => {
     try {
-      if (!currentChain.chainNumber || !currentChain.network) {
-        return;
-      }
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-      const setNetworkNativeToken = async () => {
-        if (currentChain.network === "sepolia") {
-          return "ETH";
-        } else if (currentChain.network === "bsc") {
-          return "tBNB";
-        } else if (currentChain.network === "arbitrum") {
-          return "AGOR";
-        } else {
-          return "ETH";
-        }
-      };
-
-      const nativeToken = await setNetworkNativeToken();
+      // Request access to MetaMask
+      await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
 
       return await window.ethereum
         .request({
-          method: "wallet_addEthereumChain",
-          params: [
-            {
-              chainId: `0x${currentChain.chainNumber.toString(16)}`,
-              rpcUrls: [currentChain.rpcUrl],
-              chainName: currentChain.name,
-              nativeCurrency: {
-                name: currentChain.network,
-                symbol: nativeToken,
-                decimals: 18,
-              },
-            },
-          ],
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `${currentChain.chainId.toString(16)}` }],
         })
-        .then(() => {
+        .then((res) => {
           return true;
         })
         .catch((error) => {
-          console.error("Error setting chain ID:", error);
+          console.error("Error switching chain:", error);
+          toast.error(
+            `Error switching chain! Please add ${currentChain.name} - chainId ${currentChain.chainNumber} to your wallet.`
+          );
           return false;
         });
     } catch (err) {
@@ -148,12 +130,20 @@ export const Cryptocurrency = () => {
 
       if (!isChainSet) {
         console.log("chain not set.");
-        await setChainId();
+        toast.error("Chain not set.");
+        // await setChainId();
         return;
       }
 
       if (!buyValue || buyValue <= 0) {
         console.log("Amount value must be greater than 0.");
+        toast.error("Amount value must be greater than 0.");
+        return;
+      }
+
+      if (buyValue > currentUser.balance) {
+        console.log("Insufficient balance.");
+        toast.error("Insufficient balance.");
         return;
       }
 
@@ -164,9 +154,11 @@ export const Cryptocurrency = () => {
 
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let nativeTokens = ["s_Raiser", "a_Raiser", "b_Raiser"];
-      const contract = await new window.web3.eth.Contract(
+
+      const contract = new ethers.Contract(
+        currentChain.contract,
         mainContractAbi,
-        currentChain.contract
+        provider.getSigner()
       );
 
       //  Request approval for non-native tokens
@@ -188,26 +180,35 @@ export const Cryptocurrency = () => {
           await tokenContract.approve(currentChain.contract, value);
         }
 
-        const contributionResult = await contract.methods
-          .contribute(currentChain.tokenContract, value, referralCode)
-          .send({
+        // Send the contribution transaction with ERC tokens
+        const contributionResult = await contract.contribute(
+          currentChain.tokenContract,
+          value,
+          referralCode,
+          {
             from: currentUser.address,
             gasLimit: 500000,
-          });
+          }
+        );
 
         sendDataToServer(contributionResult);
       } else {
-        const contributionResult = await contract.methods
-          .contribute(currentChain.tokenContract, 0, referralCode)
-          .send({
+        // Send the contribution transaction with native tokens
+        const contributionResult = await contract.contribute(
+          currentChain.tokenContract,
+          0,
+          referralCode,
+          {
             from: currentUser.address,
             value,
-          });
+          }
+        );
 
         sendDataToServer(contributionResult);
       }
     } catch (err) {
       console.log(err);
+      toast.error(err.message);
     }
   };
 

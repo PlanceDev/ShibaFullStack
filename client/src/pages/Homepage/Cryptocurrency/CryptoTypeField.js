@@ -74,7 +74,7 @@ export const CryptoTypeField = () => {
   const tokenPicker = async (chain) => {
     const selectedChain = chainData.filter((obj) => obj.hasOwnProperty(chain));
 
-    console.log(selectedChain[0][chain]);
+    // console.log(selectedChain[0][chain]);
 
     // Handles _raiser naming error from previous dev's spaghetti code - TODO: Remove this when we have time
     const handleNamingErrorIssue = () => {
