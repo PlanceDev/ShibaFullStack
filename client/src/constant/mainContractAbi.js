@@ -19,7 +19,6 @@ export const mainContractAbi = [
     stateMutability: "nonpayable",
     type: "constructor",
   },
-  { inputs: [], name: "T", type: "error" },
   {
     anonymous: false,
     inputs: [
