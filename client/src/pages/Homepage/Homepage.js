@@ -124,7 +124,7 @@ export const Homepage = () => {
         };
 
         if (rounds > 30) {
-          setPricingRounds(30);
+          setPricingRounds(31);
           setTimerValue(timerValue);
           return clearInterval(startCountdown);
         }

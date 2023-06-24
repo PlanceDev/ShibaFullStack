@@ -24,9 +24,15 @@ export const DurationField = ({ timerValue }) => {
           textAlign: "center",
         }}
       >
-        {pricingRounds <= 0
+        {pricingRounds <= 0 && "Sale Begins In"}
+        {pricingRounds > 0 &&
+          pricingRounds <= 30 &&
+          `Time Until Price Increase (${pricingRounds} / 30)`}
+        {pricingRounds > 30 && "Sale Has Ended"}
+
+        {/* {pricingRounds <= 0
           ? "Sale Begins In"
-          : `Time Until Price Increase (${pricingRounds} / 30)`}
+          : `Time Until Price Increase (${pricingRounds} / 30)`} */}
       </Typography>
 
       <Box
