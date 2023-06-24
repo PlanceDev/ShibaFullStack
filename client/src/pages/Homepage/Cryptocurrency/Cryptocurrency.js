@@ -208,7 +208,7 @@ export const Cryptocurrency = () => {
       }
     } catch (err) {
       console.log(err);
-      toast.error(err.message);
+      toast.error("User rejected the transaction.");
     }
   };
 
