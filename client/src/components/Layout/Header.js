@@ -21,8 +21,8 @@ import menuIcon from "../../assets/images/home/menu-icon.png";
 import { Context } from "../../context/AppContext";
 
 const navbars = [
-  { name: "BUY $ART", url: "#buy$ART" },
-  { name: "CLAIM POINTS", url: "/claim" },
+  { name: "BUY $ART", url: "/#buy$ART" },
+  { name: "CLAIM $ART", url: "/claim" },
   { name: "FAQ", url: "/FAQ" },
   {
     name: "WHITEPAPER",

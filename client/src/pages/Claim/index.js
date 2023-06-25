@@ -238,6 +238,7 @@ export const Claim = () => {
       );
     } catch (err) {
       console.log(err);
+      toast.error("Error claiming points.");
     }
   };
 
@@ -332,7 +333,7 @@ export const Claim = () => {
                 lineHeight: { sm: "96px", xs: "48px" },
               }}
             >
-              Claim Points
+              Claim $ART
             </Typography>
 
             {currentUser.address && (

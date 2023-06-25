@@ -26,12 +26,12 @@ import { toast } from "react-toastify";
 const styles = { width: "100%" };
 
 export const Cryptocurrency = () => {
+  const { pricingRounds, setPricingRounds } = useContext(Context);
+
   const {
     setOpenModal,
     setCurrentChainId,
     currentChainId,
-    // contract,
-    // tokenContract,
     points,
     tokenBalance,
     currentPrice,
@@ -44,8 +44,6 @@ export const Cryptocurrency = () => {
     setChainStatus,
     chainStatus,
     referralCode,
-    referralLink,
-    setReferralLink,
   } = useContext(Context);
   const [selectedTokenIcon, setSelectedTokenIcon] = useState(a_eth);
   const [buyValue, setBuyValue] = useState(0);
@@ -279,17 +277,49 @@ export const Cryptocurrency = () => {
               currentChainId={currentChainId}
             />
 
-            <Box mt={4} width={"100%"}>
-              <CustomButton
-                title={!currentUser.address ? "CONNECT WALLET" : "BUY NOW"}
-                styles={styles}
-                handleClick={
-                  !currentUser.address
-                    ? handleOpenModalClick
-                    : handleBuyNowClick
-                }
-              />
-            </Box>
+            {pricingRounds < 1 && (
+              <Box mt={4} width={"100%"}>
+                <CustomButton
+                  title={
+                    !currentUser.address
+                      ? "CONNECT WALLET"
+                      : "Sale Has Not Started"
+                  }
+                  styles={styles}
+                  handleClick={
+                    !currentUser.address ? handleOpenModalClick : () => {}
+                  }
+                />
+              </Box>
+            )}
+
+            {pricingRounds <= 30 && pricingRounds >= 1 && (
+              <Box mt={4} width={"100%"}>
+                <CustomButton
+                  title={!currentUser.address ? "CONNECT WALLET" : "BUY NOW"}
+                  styles={styles}
+                  handleClick={
+                    !currentUser.address
+                      ? handleOpenModalClick
+                      : handleBuyNowClick
+                  }
+                />
+              </Box>
+            )}
+
+            {pricingRounds > 30 && (
+              <Box mt={4} width={"100%"}>
+                <CustomButton
+                  title={
+                    !currentUser.address ? "CONNECT WALLET" : "Sale Has Ended"
+                  }
+                  styles={styles}
+                  handleClick={
+                    !currentUser.address ? handleOpenModalClick : () => {}
+                  }
+                />
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Box>
