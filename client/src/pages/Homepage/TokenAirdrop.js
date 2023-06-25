@@ -13,8 +13,8 @@ const items = [
     text: "All sales made from your referral code are tracked.",
   },
   {
-    title: "Start earning $ART airdrop",
-    text: "Receive an airdrop on launch!",
+    title: "Start earning $ART",
+    text: "Receive an $ART airdrop upon launch!",
   },
 ];
 
@@ -72,7 +72,7 @@ export const TokenAirdrop = () => {
               pt={{ lg: 20, md: 12, xs: 6 }}
               pb={12}
               sx={{
-                height: { lg: "300px", sm: "280px", xs: "initial" },
+                height: { lg: "350px", sm: "280px", xs: "initial" },
                 "&:hover": {
                   background: "#F7FBFA",
                   boxShadow: "0px 32px 48px -16px rgba(0, 0, 0, 0.1)",

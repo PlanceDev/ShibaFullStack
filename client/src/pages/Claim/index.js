@@ -20,6 +20,7 @@ import { ethers } from "ethers";
 import Web3 from "web3";
 
 import FAQ_icon from "../../assets/images/FAQ/FAQ_DOG.png";
+import roadMapImage from "../../assets/images/home/roadmap.png";
 
 import { InputField } from "../../components/InputField";
 
@@ -245,7 +246,7 @@ export const Claim = () => {
   return (
     <Box
       sx={{
-        maxWidth: "1440px",
+        // maxWidth: "1440px",
         margin: "auto",
       }}
     >
@@ -272,11 +273,12 @@ export const Claim = () => {
             </Typography>
             <Button
               sx={{
+                zIndex: 1,
                 width: { sm: "192px", xs: "120px" },
                 height: { sm: "72px", xs: "35px" },
                 background: "#FE6768",
                 borderRadius: { sm: "48px", xs: "30px" },
-                marginTop: { sm: "20px", xs: "12px" },
+                marginTop: { sm: "10px", xs: "12px" },
                 "&:hover": {
                   background: "#e03738",
                 },
@@ -293,9 +295,11 @@ export const Claim = () => {
           <Box
             component={"img"}
             alt=""
-            src={FAQ_icon}
+            src={roadMapImage}
             sx={{
-              width: "100%",
+              marginTop: "20px",
+              height: "72%",
+              width: "75%",
               position: "absolute",
               bottom: 0,
               right: 0,

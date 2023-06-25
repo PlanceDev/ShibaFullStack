@@ -20,8 +20,11 @@ export const DurationField = ({ timerValue }) => {
         variant="h3"
         sx={{
           fontSize: 16,
-          color: "#525252 !important",
+          color: "#714c29 !important",
           textAlign: "center",
+          // backgroundColor: "#fff",
+          border: "1px solid #714c29",
+          borderRadius: "3px",
         }}
       >
         {pricingRounds < 1 && "Sale Begins In"}
@@ -32,7 +35,7 @@ export const DurationField = ({ timerValue }) => {
       </Typography>
 
       <Box
-        mt={1}
+        mt={6}
         display={"flex"}
         justifyContent={"space-between"}
         alignItems={"center"}
