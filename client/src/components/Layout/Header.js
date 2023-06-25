@@ -100,7 +100,7 @@ export const Header = () => {
                 >
                   FAQ
                 </Typography>
-              ) : item.name === "CLAIM POINTS" ? (
+              ) : item.name === "CLAIM $ART" ? (
                 <Typography
                   variant="h5"
                   onClick={() => navigate("/claim")}
