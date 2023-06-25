@@ -103,18 +103,6 @@ export const Cryptocurrency = () => {
         )
         .then((res) => {
           console.log(res);
-          // Update the user's balance and points
-
-          let provider = new ethers.providers.Web3Provider(window.ethereum);
-          // getBalance(currentChain, provider, dispatch, setCurrentUser);
-
-          getPoints(
-            currentChain.contract,
-            provider,
-            dispatch,
-            currentUser,
-            setCurrentUser
-          );
         })
         .catch((err) => {
           console.log(err);

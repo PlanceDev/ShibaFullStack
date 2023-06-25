@@ -25,6 +25,7 @@ export const ValueTypeField = ({
   const dispatch = useDispatch();
   const [selectedTokenIcon, setSelectedTokenIcon] = useState("");
 
+  // Get equivalent points from contract
   const updatePoints = async (value) => {
     if (!provider) {
       provider = new ethers.providers.Web3Provider(
@@ -38,7 +39,6 @@ export const ValueTypeField = ({
       provider
     );
 
-    // Get equivalent points from contract
     await contract
       .estimate(currentChain.tokenContract, value)
       .then((res) => {

@@ -84,7 +84,7 @@ export const cryptoTypes = [
     token: "",
     symbol: eth,
     symbol1: a_eth,
-    chainId: "0xaa36a7",
+    chainId: process.env.REACT_APP_ETH_CHAIN_ID,
   },
   {
     networkType: "sepolia",
@@ -94,7 +94,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: eth,
     symbol1: a_eth,
-    chainId: "0xaa36a7",
+    chainId: process.env.REACT_APP_ETH_CHAIN_ID,
   },
   {
     networkType: "sepolia",
@@ -104,7 +104,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: wbtc,
     symbol1: a_wbtc,
-    chainId: "0xaa36a7",
+    chainId: process.env.REACT_APP_ETH_CHAIN_ID,
   },
   {
     networkType: "sepolia",
@@ -114,7 +114,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: usdc,
     symbol1: a_usdc,
-    chainId: "0xaa36a7",
+    chainId: process.env.REACT_APP_ETH_CHAIN_ID,
   },
   {
     networkType: "sepolia",
@@ -124,7 +124,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: usdt,
     symbol1: a_usdt,
-    chainId: "0xaa36a7",
+    chainId: process.env.REACT_APP_ETH_CHAIN_ID,
   },
   {
     networkType: "arbitrum",
@@ -134,7 +134,7 @@ export const cryptoTypes = [
     token: "",
     symbol: eth,
     symbol1: a_eth,
-    chainId: "0x66eed",
+    chainId: process.env.REACT_APP_ARB_CHAIN_ID,
   },
   {
     networkType: "arbitrum",
@@ -144,7 +144,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: eth,
     symbol1: a_eth,
-    chainId: "0x66eed",
+    chainId: process.env.REACT_APP_ARB_CHAIN_ID,
   },
   {
     networkType: "arbitrum",
@@ -154,7 +154,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: wbtc,
     symbol1: a_wbtc,
-    chainId: "0x66eed",
+    chainId: process.env.REACT_APP_ARB_CHAIN_ID,
   },
   {
     networkType: "arbitrum",
@@ -164,7 +164,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: usdc,
     symbol1: a_usdc,
-    chainId: "0x66eed",
+    chainId: process.env.REACT_APP_ARB_CHAIN_ID,
   },
   {
     networkType: "arbitrum",
@@ -174,7 +174,7 @@ export const cryptoTypes = [
     token: "ERC20",
     symbol: usdt,
     symbol1: a_usdt,
-    chainId: "0x66eed",
+    chainId: process.env.REACT_APP_ARB_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -184,7 +184,7 @@ export const cryptoTypes = [
     token: "",
     symbol: bnb,
     symbol1: a_bnb,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -194,7 +194,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: bnb,
     symbol1: a_bnb,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -204,7 +204,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: wbtc,
     symbol1: a_wbtc,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -214,7 +214,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: busd,
     symbol1: a_busd,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -224,7 +224,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: usdc,
     symbol1: a_usdc,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
   {
     networkType: "bsc",
@@ -234,7 +234,7 @@ export const cryptoTypes = [
     token: "BEP20",
     symbol: usdt,
     symbol1: a_usdt,
-    chainId: "0x61",
+    chainId: process.env.REACT_APP_BSC_CHAIN_ID,
   },
 ];
 

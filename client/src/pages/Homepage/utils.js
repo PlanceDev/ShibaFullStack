@@ -1,4 +1,3 @@
-import e from "cors";
 import { mainContractAbi } from "../../constant/mainContractAbi";
 import { ethers } from "ethers";
 import Web3 from "web3";

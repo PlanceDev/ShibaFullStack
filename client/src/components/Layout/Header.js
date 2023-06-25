@@ -22,11 +22,12 @@ import { Context } from "../../context/AppContext";
 
 const navbars = [
   { name: "BUY $ART", url: "#buy$ART" },
+  { name: "CLAIM POINTS", url: "/claim" },
+  { name: "FAQ", url: "/FAQ" },
   {
     name: "WHITEPAPER",
     url: "https://docs.google.com/document/d/1RbQczVVOjoHFzwivRfQSpK66b3dofENvHcSQF9WW7fQ/edit",
   },
-  { name: "FAQ", url: "/FAQ" },
 ];
 
 export const Header = () => {
@@ -98,6 +99,17 @@ export const Header = () => {
                   }}
                 >
                   FAQ
+                </Typography>
+              ) : item.name === "CLAIM POINTS" ? (
+                <Typography
+                  variant="h5"
+                  onClick={() => navigate("/claim")}
+                  sx={{
+                    cursor: "pointer",
+                    marginTop: "5px",
+                  }}
+                >
+                  CLAIM POINTS
                 </Typography>
               ) : (
                 <Link

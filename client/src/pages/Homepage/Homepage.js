@@ -141,7 +141,7 @@ export const Homepage = () => {
       }
 
       // If sale is in future
-      if (rounds < 0) {
+      if (rounds < 1) {
         let duration = ethTimeStamp - currentTimestamp / 1000;
 
         const days = Math.floor(duration / 60 / 60 / 24);

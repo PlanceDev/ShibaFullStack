@@ -136,11 +136,11 @@ export const CryptoTypeField = () => {
       case 0:
         dispatch(
           setCurrentChain({
-            name: "Sepolia test network",
+            name: "Sepolia",
             network: "sepolia",
             cryptoType: "s_Raiser",
-            chainId: "0xaa36a7",
-            chainNumber: 11155111,
+            chainId: process.env.REACT_APP_ETH_CHAIN_ID,
+            chainNumber: process.env.REACT_APP_ETH_CHAIN_NUMBER,
             contract: process.env.REACT_APP_ETH_CONTRACT,
             tokenContract: process.env.REACT_APP_WETH_CONTRACT,
             tokenSymbol: "s_Raiser",
@@ -156,11 +156,11 @@ export const CryptoTypeField = () => {
       case 1:
         dispatch(
           setCurrentChain({
-            name: "Binance Smart Chain Testnet",
+            name: "Binance Smart Chain",
             network: "bsc",
             cryptoType: "b_Raiser",
-            chainId: "0x61",
-            chainNumber: 97,
+            chainId: process.env.REACT_APP_BSC_CHAIN_ID,
+            chainNumber: process.env.REACT_APP_BSC_CHAIN_NUMBER,
             contract: process.env.REACT_APP_BSC_CONTRACT,
             tokenContract: process.env.REACT_APP_WBSC_CONTRACT,
             tokenSymbol: "b_Raiser",
@@ -176,11 +176,11 @@ export const CryptoTypeField = () => {
       case 2:
         dispatch(
           setCurrentChain({
-            name: "Arbitrum Testnet",
+            name: "Arbitrum",
             network: "arbitrum",
             cryptoType: "a_Raiser",
-            chainId: "0x66eed",
-            chainNumber: 421613,
+            chainId: process.env.REACT_APP_ARB_CHAIN_ID,
+            chainNumber: process.env.REACT_APP_ARB_CHAIN_NUMBER,
             contract: process.env.REACT_APP_ARB_CONTRACT,
             tokenContract: process.env.REACT_APP_WARB_CONTRACT,
             tokenSymbol: "a_Raiser",
@@ -197,17 +197,6 @@ export const CryptoTypeField = () => {
         break;
     }
   };
-
-  // useEffect(() => {
-  //   if (window.ethereum) {
-  //     handleDefaultSwitch("sepolia");
-  //     window.ethereum.on("chainChanged", networkChanged);
-
-  //     return () => {
-  //       window.ethereum.removeListener("chainChanged", networkChanged);
-  //     };
-  //   }
-  // }, [networkChanged]);
 
   return (
     <>

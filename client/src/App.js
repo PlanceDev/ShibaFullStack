@@ -10,6 +10,7 @@ import { AppProvider } from "./context/AppContext";
 import { Layout } from "./components/Layout";
 import { Homepage } from "./pages/Homepage";
 import { FAQ } from "./pages/FAQ";
+import { Claim } from "./pages/Claim";
 
 import "./App.css";
 
@@ -18,6 +19,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import * as buffer from "buffer";
 import { useEffect } from "react";
+
 window.Buffer = buffer.Buffer;
 
 function App() {
@@ -41,6 +43,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Homepage />} />
                   <Route exact path="/FAQ" element={<FAQ />} />
+                  <Route exact path="/claim" element={<Claim />} />
                 </Routes>
               </Layout>
             </BrowserRouter>
