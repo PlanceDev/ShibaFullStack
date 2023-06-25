@@ -109,7 +109,7 @@ export const Header = () => {
                     marginTop: "5px",
                   }}
                 >
-                  CLAIM POINTS
+                  CLAIM $ART
                 </Typography>
               ) : (
                 <Link
