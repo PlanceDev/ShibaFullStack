@@ -31,7 +31,7 @@ export const DurationField = ({ timerValue }) => {
         {pricingRounds >= 1 &&
           pricingRounds <= 30 &&
           `Time Until Price Increase (${pricingRounds}  / 30)`}
-        {pricingRounds > 30 && "Sale Has Ended"}
+        {pricingRounds > 30 && "Sale Not Active"}
       </Typography>
 
       <Box

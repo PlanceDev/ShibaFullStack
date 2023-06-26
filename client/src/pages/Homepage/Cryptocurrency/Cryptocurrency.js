@@ -311,7 +311,7 @@ export const Cryptocurrency = () => {
               <Box mt={4} width={"100%"}>
                 <CustomButton
                   title={
-                    !currentUser.address ? "CONNECT WALLET" : "Sale Has Ended"
+                    !currentUser.address ? "CONNECT WALLET" : "Sale Not Active"
                   }
                   styles={styles}
                   handleClick={
