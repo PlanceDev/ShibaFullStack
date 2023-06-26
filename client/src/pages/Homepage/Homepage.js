@@ -105,11 +105,15 @@ export const Homepage = () => {
 
       let currentTimestamp = new Date().getTime();
       let duration = currentTimestamp / 1000 - ethTimeStamp;
-      const rounds = Math.floor(duration / 720) + 1;
+      const rounds =
+        Math.floor(duration / process.env.REACT_APP_PERIOD_TIME) + 1;
 
       //  If sale has started
       if (rounds >= 1) {
-        const timeToNextRound = Math.floor(720 - (duration % 720));
+        const timeToNextRound = Math.floor(
+          process.env.REACT_APP_PERIOD_TIME -
+            (duration % process.env.REACT_APP_PERIOD_TIME)
+        );
 
         const days = Math.floor(timeToNextRound / 60 / 60 / 24);
         const hours = Math.floor(timeToNextRound / 60 / 60) % 24;
