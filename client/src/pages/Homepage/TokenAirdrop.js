@@ -45,7 +45,7 @@ export const TokenAirdrop = () => {
         }}
       >
         <span style={{ color: matches ? "#F29B4C" : "#FE6768" }}>$ART</span> 50
-        billion token airdrop
+        million token airdrop
       </Typography>
       <Typography
         px={{ sm: 4, xs: 0 }}
