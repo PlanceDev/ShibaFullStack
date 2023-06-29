@@ -14,6 +14,10 @@ const footers = {
       name: "Whitepaper",
       url: "https://docs.google.com/document/d/1RbQczVVOjoHFzwivRfQSpK66b3dofENvHcSQF9WW7fQ/edit",
     },
+    {
+      name: "Audit Report",
+      url: "https://drive.google.com/file/d/1LAlIqtohZsG5sqqGzBciZQ5Oh0HN_Hap/view",
+    },
   ],
   info: [
     { name: "FAQ", url: "/FAQ" },
@@ -119,7 +123,12 @@ export const Footer = () => {
                     ) : (
                       <Link
                         href={item.url}
-                        target={item.name === "Whitepaper" ? "_blank" : "_self"}
+                        target={
+                          item.name === "Whitepaper" ||
+                          item.name === "Audit Report"
+                            ? "_blank"
+                            : "_self"
+                        }
                         sx={{
                           display: "flex",
                           alignItems: "center",

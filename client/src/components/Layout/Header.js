@@ -25,6 +25,10 @@ const navbars = [
   { name: "CLAIM $ART", url: "/claim" },
   { name: "FAQ", url: "/FAQ" },
   {
+    name: "AUDIT",
+    url: "https://drive.google.com/file/d/1LAlIqtohZsG5sqqGzBciZQ5Oh0HN_Hap/view",
+  },
+  {
     name: "WHITEPAPER",
     url: "https://docs.google.com/document/d/1RbQczVVOjoHFzwivRfQSpK66b3dofENvHcSQF9WW7fQ/edit",
   },
@@ -116,7 +120,11 @@ export const Header = () => {
                   key={i}
                   variant="h5"
                   href={item.url}
-                  target={item.name === "WHITEPAPER" ? "_blank" : "_self"}
+                  target={
+                    item.name === "WHITEPAPER" || item.name === "AUDIT"
+                      ? "_blank"
+                      : "_self"
+                  }
                   sx={{
                     cursor: "pointer",
                   }}
@@ -194,13 +202,17 @@ export const Header = () => {
             </Box>
             <Box>
               {navbars.map((item, i) =>
-                item.name === "WHITEPAPER" ? (
+                item.name === "WHITEPAPER" || item.name === "AUDIT" ? (
                   <Link
                     key={i}
                     variant="h5"
                     px={4}
                     py={{ sm: 4, xs: 3 }}
-                    target={item.name === "WHITEPAPER" ? "_blank" : "_self"}
+                    target={
+                      item.name === "WHITEPAPER" || item.name === "AUDIT"
+                        ? "_blank"
+                        : "_self"
+                    }
                     href={item.url}
                     sx={{
                       display: "flex",
