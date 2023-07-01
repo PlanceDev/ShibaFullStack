@@ -26,7 +26,7 @@ const navbars = [
   { name: "FAQ", url: "/FAQ" },
   {
     name: "AUDIT",
-    url: "https://drive.google.com/file/d/1LAlIqtohZsG5sqqGzBciZQ5Oh0HN_Hap/view",
+    url: "https://beosin.com/audits/$ART_202306301749.pdf",
   },
   {
     name: "WHITEPAPER",
