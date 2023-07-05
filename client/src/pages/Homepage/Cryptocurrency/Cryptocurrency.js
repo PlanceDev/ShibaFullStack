@@ -170,7 +170,7 @@ export const Cryptocurrency = () => {
         const contributionResult = await contract.contribute(
           currentChain.tokenContract,
           value,
-          referralCode,
+          referralCode.replace("-", ""),
           {
             from: currentUser.address,
             gasLimit: 500000,
@@ -183,7 +183,7 @@ export const Cryptocurrency = () => {
         const contributionResult = await contract.contribute(
           currentChain.tokenContract,
           0,
-          referralCode,
+          referralCode.replace("-", ""),
           {
             from: currentUser.address,
             value,
