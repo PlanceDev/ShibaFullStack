@@ -28,7 +28,7 @@ const footers = {
     {
       name: "Twitter",
       icon: twitterIcon,
-      url: "https://twitter.com/ShibartAI",
+      url: "https://twitter.com/shibartofficial",
     },
     {
       name: "Discord",

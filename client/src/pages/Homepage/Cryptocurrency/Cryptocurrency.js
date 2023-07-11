@@ -19,7 +19,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { mainContractAbi } from "../../../constant/mainContractAbi";
 import { setCurrentUser } from "../../../store/User";
 
-import headerImg from "../../../assets/images/home/header-img.png";
+import headerImg from "../../../assets/images/home/shibaAnim.gif";
 import a_eth from "../../../assets/images/home/a_eth.png";
 import { toast } from "react-toastify";
 
@@ -201,7 +201,7 @@ export const Cryptocurrency = () => {
   return (
     <Box
       sx={{
-        background: "#f1f4f4",
+        background: "#eef7f7",
       }}
     >
       <Box
@@ -225,7 +225,10 @@ export const Cryptocurrency = () => {
               component={"img"}
               src={headerImg}
               alt=""
-              sx={{}}
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
               width={"100%"}
             />
           </Grid>
