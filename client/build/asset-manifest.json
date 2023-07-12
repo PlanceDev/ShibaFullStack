@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.ac522eb0.css",
-    "main.js": "/static/js/main.7e6ca5d3.js",
+    "main.js": "/static/js/main.c99b6dbe.js",
     "static/js/601.46d884ba.chunk.js": "/static/js/601.46d884ba.chunk.js",
     "static/js/27.f2b66d9b.chunk.js": "/static/js/27.f2b66d9b.chunk.js",
     "static/js/419.d0f8dd8e.chunk.js": "/static/js/419.d0f8dd8e.chunk.js",
@@ -28,17 +28,19 @@
     "static/media/image 12.png": "/static/media/image 12.fe07f3dcd680834b3221.png",
     "static/media/image 11.png": "/static/media/image 11.8aeb77f72fc6ea58e792.png",
     "static/media/image 16.png": "/static/media/image 16.8e8f4d7312a652d3855f.png",
+    "static/media/2.png": "/static/media/2.62104e458d27dba9a0b4.png",
+    "static/media/1.png": "/static/media/1.bf206460423810301a46.png",
     "static/media/modal-logo.svg": "/static/media/modal-logo.9fa570b247020e6381185102a1baf5fb.svg",
     "static/media/logo.svg": "/static/media/logo.807a2780dd3ec70cae34a3b80e827fb7.svg",
     "static/media/telegram.png": "/static/media/telegram.c6d193b6b94764bc9517.png",
     "index.html": "/index.html",
     "main.ac522eb0.css.map": "/static/css/main.ac522eb0.css.map",
-    "main.7e6ca5d3.js.map": "/static/js/main.7e6ca5d3.js.map",
+    "main.c99b6dbe.js.map": "/static/js/main.c99b6dbe.js.map",
     "419.d0f8dd8e.chunk.js.map": "/static/js/419.d0f8dd8e.chunk.js.map",
     "778.a47569b3.chunk.js.map": "/static/js/778.a47569b3.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ac522eb0.css",
-    "static/js/main.7e6ca5d3.js"
+    "static/js/main.c99b6dbe.js"
   ]
 }

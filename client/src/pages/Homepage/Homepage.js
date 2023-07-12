@@ -14,6 +14,7 @@ import {
   Gallery,
   Roadmap,
   TokenAirdrop,
+  Partners,
 } from "../Homepage";
 import { mainContractAbi } from "../../constant/mainContractAbi";
 import { Context } from "../../context/AppContext";
@@ -178,6 +179,7 @@ export const Homepage = () => {
   return (
     <Box mt={2}>
       <Cryptocurrency />
+      <Partners />
       <ShibartGenerate />
       <Gallery />
       <Roadmap />
