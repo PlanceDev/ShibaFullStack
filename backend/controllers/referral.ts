@@ -1,6 +1,6 @@
-import e, { Request, Response } from "express";
-import ReferralCode from "../models/ReferralCode";
-import jwt from "jsonwebtoken";
+import e, { Request, Response } from 'express';
+import ReferralCode from '../models/ReferralCode';
+import jwt from 'jsonwebtoken';
 
 // @route   GET api/referral/:referralId
 // @desc    Check if referral exists
@@ -12,7 +12,7 @@ export const checkReferral = async (req: Request, res: Response) => {
     });
 
     if (!referralCode) {
-      return res.status(200).send("no-ref");
+      return res.status(200).send('no-ref');
     }
 
     const accessToken = jwt.sign(
@@ -20,21 +20,21 @@ export const checkReferral = async (req: Request, res: Response) => {
         _id: referralCode._id,
         referrer: referralCode.owner,
       },
-      process.env.ACCESS_TOKEN_SECRET || "",
+      process.env.ACCESS_TOKEN_SECRET || '',
       {
-        expiresIn: "365d",
+        expiresIn: '365d',
       }
     );
 
-    res.cookie("referral", accessToken, {
+    res.cookie('referral', accessToken, {
       maxAge: 365 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: false,
     });
 
-    return res.status(200).send("ref");
+    return res.status(200).send('ref');
   } catch (error) {
     console.log(error);
-    return res.status(500).send("Server error.");
+    return res.status(500).send('Server error.');
   }
 };

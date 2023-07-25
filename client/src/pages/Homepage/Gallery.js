@@ -6,6 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import axios from "axios";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { CustomButton } from "../../components/CustomButton";
 
@@ -55,7 +56,6 @@ const galleries = [
 ];
 
 export const Gallery = () => {
-  const defaultPrompt = "Super cute Shiba Inu";
   const matches = useMediaQuery("(min-width:426px)");
   const [showGalleries, setShowGalleries] = useState(galleries);
   const [showMoreCount, SetShowMoreCount] = useState();
@@ -74,63 +74,26 @@ export const Gallery = () => {
   };
 
   const onGenerate = async () => {
-    console.log(prompt);
     setIsFetching(true);
-    const sdModel = sdModelsDiffusers[0];
-    const SDmodelData = SDmodelMappingDiffuser[sdModel.displayName];
-    const negativePromptUser = "";
-
-    let userPrompt = prompt
-      .replace("child", "")
-      .replace("kid", "")
-      .replace("loli", "")
-      .replace("underage", "");
-
-    // If userPrompt is an empty string, use defaultPrompt
-    if (userPrompt.trim() === "") {
-      userPrompt = defaultPrompt;
-    }
-
-    const updatedPrompt = userPrompt + ", " + SDmodelData.promptAppended;
-    const negativePrompt =
-      negativePromptUser + SDmodelData.negativePromptAppended + ", ";
-
-    const requestBody = {
-      prompt: updatedPrompt,
-      width: SDmodelData.width || 512,
-      height: SDmodelData.height || 512,
-      cfg_scale: SDmodelData.cfg_scale || 6,
-      steps: SDmodelData.steps || 25,
-      negative_prompt: negativePrompt || "bad quality",
-      weight_list: SDmodelData.weight_list || [0.24, 0.24, 0.02],
-      model: SDmodelData.model,
-      multicontrolnet: SDmodelData.multicontrolnet || 3,
-      qr_size: SDmodelData.qr_size || 768,
-      scheduler_name: SDmodelData.scheduler_name || "DDIM",
-    };
-
-    console.log("Request Body for API", requestBody);
-    let SDresponse;
 
     try {
-      const res = await fetch(
-        "http://209.137.198.8:43133/txt2hires_esrgan_img2img",
+      const res = await axios.post(
+        `${process.env.REACT_APP_SERVER_URL}/image`,
         {
-          method: "POST",
-          headers: {
-            accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestBody),
+          prompt: prompt,
+          modelName: "Real",
         },
+        {
+          "Content-Type": "application/json",
+        },
+        { withCredentials: true },
       );
 
-      SDresponse = await res.json();
-    } catch (error) {
-      console.log("Error while generating image: ", error);
+      setShowGalleries((prev) => [{ image: res.data.images[0] }, ...prev]);
+    } catch (err) {
+      console.log(err);
     }
 
-    console.log(SDresponse);
     setIsFetching(false);
   };
 
