@@ -1,5 +1,6 @@
 import e, { Request, Response } from 'express';
 import Image from '../models/Image';
+import { ObjectId } from 'mongoose';
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { SDmodelMappingDiffuser, sdModelsDiffusers } from '../constants/models';
@@ -9,16 +10,16 @@ import { SDmodelMappingDiffuser, sdModelsDiffusers } from '../constants/models';
 // @access  Public
 export const saveImage = async (req: Request, res: Response) => {
   try {
-    const { prompt, modelName } = req.body;
+    const { prompt, modelType } = req.body;
 
-    if (!modelName) {
-      return res.status(400).send({ error: 'No model name fou1nd' });
+    if (!modelType) {
+      return res.status(400).send({ error: 'No model type found' });
     }
 
     const defaultPrompt = 'Super cute Shiba Inu';
 
     const sdModel: any = sdModelsDiffusers.find(
-      (sdModel: any) => sdModel.displayName === modelName
+      (sdModel: any) => sdModel.displayName === modelType
     );
 
     const SDmodelData = SDmodelMappingDiffuser[sdModel.displayName as string];
@@ -63,9 +64,22 @@ export const saveImage = async (req: Request, res: Response) => {
       SDresponse = res.data;
     } catch (error) {
       console.log('Error while generating image: ', error);
+      return res.status(500).send('Error occured while generating image');
     }
 
-    return res.status(200).send(SDresponse);
+    const newImage = new Image({
+      prompt: updatedPrompt,
+      imageData: SDresponse.images[0],
+    });
+
+    try {
+      const result = await newImage.save();
+
+      return res.status(200).send(result);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).end('Error occured while saving image into db');
+    }
   } catch (error) {
     console.log(error);
 
@@ -75,7 +89,7 @@ export const saveImage = async (req: Request, res: Response) => {
 
 export const getImages = async (req: Request, res: Response) => {
   try {
-    const images = Image.getImages();
+    const images = await Image.getImages();
     return res.status(200).send(images);
   } catch (error) {
     console.log(error);

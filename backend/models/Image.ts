@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Model, model, Schema, Document } from 'mongoose';
+import { Model, model, Schema, Document, ObjectId } from 'mongoose';
 
 export interface IImage extends Document {
-  id?: string;
-  name: string;
-  image: string;
-  createdAt?: Date;
+  imageId: string;
+  prompt: string;
+  imageData: string;
+  createdAt: Date;
 }
 
 export interface IImageModel extends Model<IImage> {
@@ -15,16 +15,14 @@ export interface IImageModel extends Model<IImage> {
 
 const imageSchema = new Schema<IImage, IImageModel>(
   {
-    id: {
+    imageId: {
       type: String,
       default: uuidv4,
     },
-    name: {
+    prompt: {
       type: String,
-      required: true,
-      unique: true,
     },
-    image: {
+    imageData: {
       type: String,
     },
     createdAt: {
@@ -42,12 +40,13 @@ const imageSchema = new Schema<IImage, IImageModel>(
   }
 );
 
-imageSchema.statics.saveImage = async function (data: IImage): Promise<IImage> {
+imageSchema.statics.createImage = async function (
+  data: IImage
+): Promise<IImage> {
   try {
     const image = await this.create({
-      name: data.name,
-      image: data.image,
-      createdAt: data.createdAt,
+      prompt: data.prompt,
+      imageData: data.imageData,
     });
 
     return image;
@@ -68,6 +67,6 @@ imageSchema.statics.getImages = async function (): Promise<IImage[]> {
   }
 };
 
-const User = model<IImage, IImageModel>('Image', imageSchema);
+const Image = model<IImage, IImageModel>('Image', imageSchema);
 
-export default User;
+export default Image;

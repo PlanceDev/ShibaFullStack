@@ -5,6 +5,7 @@ import {
   LinearProgress,
   Typography,
   useMediaQuery,
+  Button,
 } from "@mui/material";
 import axios from "axios";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -56,20 +57,41 @@ const galleries = [
 ];
 
 export const Gallery = () => {
+  const modelTypes = ["Real", "Anime", "Dream", "Fantasy"];
   const matches = useMediaQuery("(min-width:426px)");
-  const [showGalleries, setShowGalleries] = useState(galleries);
+  const [showGalleries, setShowGalleries] = useState([]);
+  const [modelType, setModelType] = useState("Real");
   const [showMoreCount, SetShowMoreCount] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [isFetching, setIsFetching] = useState(false);
 
+  const fetchImages = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_SERVER_URL}/image`, {
+        withCredentials: true,
+      });
+
+      setShowGalleries(res.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const showItems = galleries.slice(0, 12);
-    setShowGalleries(showItems);
-    SetShowMoreCount(galleries.length - 12);
+    setIsLoading(true);
+    fetchImages();
   }, []);
 
+  // useEffect(() => {
+  //   const showItems = galleries.slice(0, 12);
+  //   setShowGalleries(showItems);
+  //   SetShowMoreCount(galleries.length - 12);
+  // }, []);
+
   const handleMoreClick = () => {
-    setShowGalleries(galleries);
+    // setShowGalleries(galleries);
     SetShowMoreCount(0);
   };
 
@@ -81,7 +103,7 @@ export const Gallery = () => {
         `${process.env.REACT_APP_SERVER_URL}/image`,
         {
           prompt: prompt,
-          modelName: "Real",
+          modelType: modelType,
         },
         {
           "Content-Type": "application/json",
@@ -89,7 +111,7 @@ export const Gallery = () => {
         { withCredentials: true },
       );
 
-      setShowGalleries((prev) => [{ image: res.data.images[0] }, ...prev]);
+      setShowGalleries((prev) => [res.data, ...prev]);
     } catch (err) {
       console.log(err);
     }
@@ -197,14 +219,57 @@ export const Gallery = () => {
           />
         </Box>
       </Box>
-      <Box mt="10px">{isFetching && <LinearProgress />}</Box>
+      <Box
+        display={{ sm: "flex", xs: "flex" }}
+        justifyContent={"center"}
+        alignItems={"center"}
+        flexWrap={"wrap"}
+        gap={4}
+        marginTop={4}
+      >
+        {modelTypes.map((mt, i) => (
+          <Button
+            key={i}
+            onClick={() => setModelType(mt)}
+            sx={{
+              width: "110px",
+              border: "2px solid #3C2C2D",
+              borderRadius: "4px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "8px",
+              background: modelType === mt ? "#f6e1ce" : "#fff",
+              "&:hover": {
+                background: "#f6e1ce",
+              },
+            }}
+          >
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              alignItems={"center"}
+            >
+              <Typography
+                variant="h4"
+                sx={{
+                  color: "#8C7662",
+                }}
+              >
+                {mt}
+              </Typography>
+            </Box>
+          </Button>
+        ))}
+      </Box>
+      <Box mt="10px">{(isLoading || isFetching) && <LinearProgress />}</Box>
       <Box mt={12}>
         <Grid container spacing={{ sm: 8, xs: 4 }}>
           {showGalleries.map((item, i) => (
             <Grid key={i} item md={3} sm={6} xs={12}>
               <Box
                 component={"img"}
-                src={item.image}
+                src={`data:image/png;base64,${item.imageData}`}
                 alt=""
                 sx={{
                   width: "100%",
@@ -213,13 +278,13 @@ export const Gallery = () => {
             </Grid>
           ))}
         </Grid>
-        <Box display={"flex"} justifyContent={"center"} mt={{ sm: 12, xs: 6 }}>
+        {/* <Box display={"flex"} justifyContent={"center"} mt={{ sm: 12, xs: 6 }}>
           <CustomButton
             title="SEE MORE"
             showMore={showMoreCount}
             handleClick={handleMoreClick}
           />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
