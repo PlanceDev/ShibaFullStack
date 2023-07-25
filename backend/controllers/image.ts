@@ -10,7 +10,6 @@ import { SDmodelMappingDiffuser, sdModelsDiffusers } from '../constants/models';
 export const saveImage = async (req: Request, res: Response) => {
   try {
     const { prompt, modelName } = req.body;
-    console.log(req.body);
 
     if (!modelName) {
       return res.status(400).send({ error: 'No model name fou1nd' });
