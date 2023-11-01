@@ -1,5 +1,6 @@
 import { ThemeProvider, Box } from "@mui/material";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ReactGA from 'react-ga';
 
 import { Web3ReactProvider, useWeb3React, web } from "@web3-react/core";
 import { ethers } from "ethers";
@@ -22,12 +23,19 @@ import { useEffect } from "react";
 
 window.Buffer = buffer.Buffer;
 
+const TRACKING_ID = "UA-289283710-1"; // OUR_TRACKING_ID
+ReactGA.initialize(TRACKING_ID);
+
 function App() {
   function getLibrary(provider) {
     const library = new ethers.providers.Web3Provider(provider);
     library.pollingInterval = 8000; // frequency provider is polling
     return library;
   }
+
+  useEffect(() => {
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
 
   return (
     <Box

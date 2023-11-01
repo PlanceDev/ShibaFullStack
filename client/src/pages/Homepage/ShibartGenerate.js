@@ -1,4 +1,6 @@
 import { Box, Typography } from "@mui/material";
+import Tooltip, { TooltipProps, tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
 import Ticker from "react-ticker";
 
 import { CustomButton } from "../../components/CustomButton";
@@ -43,7 +45,19 @@ const carousels = [
   { image: image18 },
 ];
 
+const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+        color: theme.palette.common.black,
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: theme.palette.common.black,
+    },
+}));
+
 export const ShibartGenerate = () => {
+
   return (
     <Box
       py={{ sm: 20, xs: 10 }}
@@ -102,7 +116,11 @@ export const ShibartGenerate = () => {
           )}
         </Ticker>
         <Box mt={8} display={"flex"} justifyContent={"center"}>
-          <CustomButton title="START CREATING" />
+            <BootstrapTooltip  title="Coming soon" arrow disableInteractive>
+                 <span>
+                  <CustomButton title="START CREATING" styles={{cursor: "not-allowed;"}}/>
+                 </span>
+             </BootstrapTooltip>
         </Box>
       </Box>
     </Box>
