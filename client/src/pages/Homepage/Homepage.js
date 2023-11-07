@@ -50,13 +50,15 @@ export const Homepage = () => {
 
     if (!paramValue) return;
 
-    axios
+    localStorage.setItem("referralLink", paramValue);
+
+    /*axios
       .get(`${process.env.REACT_APP_SERVER_URL}/referral/${paramValue}`, {
         withCredentials: true,
       })
       .then((res) => {
         setReferralCode(paramValue);
-      });
+      });*/
   }, []);
 
   // Fetch current chain and set provider

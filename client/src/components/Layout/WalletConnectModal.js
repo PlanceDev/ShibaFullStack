@@ -70,7 +70,13 @@ export const WalletConnectModal = ({
   // Login & get user data from off-chain database
   useEffect(() => {
     if (account) {
-      axios
+        dispatch(
+            setCurrentUser({
+                address: account,
+                referralLink: account,
+            })
+        );
+      /*axios
         .post(
           `${process.env.REACT_APP_SERVER_URL}/user`,
           {
@@ -88,7 +94,7 @@ export const WalletConnectModal = ({
         })
         .catch((err) => {
           console.log(err);
-        });
+        });*/
     }
   }, [account]);
 
